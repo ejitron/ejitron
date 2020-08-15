@@ -13,6 +13,10 @@ public enum Credentials {
 		this.val = string;
 	}
 	
+	/**
+	 * Gets the value of the {@link com.github.ejitron.Credentials Credential}
+	 * @return {@link java.lang.String String} value of the credential
+	 */
 	public String getValue() {
 		return val;
 	}
