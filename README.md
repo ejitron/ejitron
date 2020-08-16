@@ -1,4 +1,6 @@
 # Ejitron
+[![Build Status](https://travis-ci.org/ejitron/ejitron.svg?branch=master)](https://travis-ci.org/ejitron/ejitron)
+
 Open source Twitch chat bot
 
 ---
