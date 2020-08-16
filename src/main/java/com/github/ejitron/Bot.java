@@ -1,5 +1,7 @@
 package com.github.ejitron;
 
+import java.util.List;
+
 import com.github.ejitron.events.chat.DefaultModCommands;
 import com.github.ejitron.events.chat.DefaultUserCommands;
 import com.github.ejitron.sql.Channels;
@@ -43,8 +45,9 @@ public class Bot {
 		loadConfiguration();
 		
 		Channels channels = new Channels();
-			
-		channels.getAddedChannels().forEach(channel -> {
+		List<String> joinedChannels = channels.getAddedChannels();
+		
+		joinedChannels.forEach(channel -> {
 			if(!twitchClient.getChat().isChannelJoined(channel))
 				twitchClient.getChat().joinChannel(channel);
 		});
