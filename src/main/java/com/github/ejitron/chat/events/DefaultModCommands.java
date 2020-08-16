@@ -1,5 +1,7 @@
-package com.github.ejitron.events.chat;
+package com.github.ejitron.chat.events;
 
+import com.github.ejitron.chat.Chat;
+import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.helix.ChannelInfo;
 import com.github.ejitron.sql.channels.Setting;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
@@ -22,12 +24,17 @@ public class DefaultModCommands {
 		if(!chat.isModerator(e.getTags())) // These are mod/broadcaster only commands.
 			return;
 		
+		// The command is in a cooldown
+		if(CommandTimer.isInCooldown(channel, args[0]))
+			return;
+		
 		/*
 		 * !title
 		 * Gets/Sets the current title
 		 */
 		if(args[0].equalsIgnoreCase("!title") && settings.getChannelSetting(channel, "title_cmd") == 1) {
 			ChannelInfo chanInfo = new ChannelInfo();
+			CommandTimer.addToCooldown(channel, args[0]);
 			
 			if(args.length < 2) {
 				String title = chanInfo.getChannelInfo(channel).getTitle();
@@ -55,6 +62,7 @@ public class DefaultModCommands {
 		 */
 		if(args[0].equalsIgnoreCase("!game") && settings.getChannelSetting(channel, "game_cmd") == 1) {
 			ChannelInfo chanInfo = new ChannelInfo();
+			CommandTimer.addToCooldown(channel, args[0]);
 			
 			if(args.length < 2) {
 				String game = chanInfo.getChannelInfo(channel).getGameName();

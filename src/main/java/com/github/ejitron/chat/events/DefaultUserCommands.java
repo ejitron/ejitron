@@ -1,5 +1,7 @@
-package com.github.ejitron.events.chat;
+package com.github.ejitron.chat.events;
 
+import com.github.ejitron.chat.Chat;
+import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.helix.Clip;
 import com.github.ejitron.helix.User;
 import com.github.ejitron.sql.channels.Setting;
@@ -22,12 +24,17 @@ public class DefaultUserCommands {
 		Chat chat = new Chat();
 		Setting settings = new Setting();
 		
+		// The command is in a cooldown
+		if(CommandTimer.isInCooldown(channel, args[0]))
+			return;
+		
 		/*
 		 * !clip
 		 * Creates a clip and sends to chat
 		 */
 		if(args[0].equalsIgnoreCase("!clip") && settings.getChannelSetting(channel, "clip_cmd") == 1) {
 			Clip clip = new Clip();
+			CommandTimer.addToCooldown(channel, args[0]);
 			
 			try {
 				CreateClip createdClip = clip.createClip(channel);
@@ -46,6 +53,7 @@ public class DefaultUserCommands {
 		if(args[0].equalsIgnoreCase("!followage") && settings.getChannelSetting(channel, "followage_cmd") == 1) {
 			User user = new User();
 			String age = user.getFollowAge(author, channel);
+			CommandTimer.addToCooldown(channel, args[0]);
 			
 			if(age == null) {
 				chat.sendMessage(channel, author + " is not following " + channel + ".");

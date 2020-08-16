@@ -2,8 +2,9 @@ package com.github.ejitron;
 
 import java.util.List;
 
-import com.github.ejitron.events.chat.DefaultModCommands;
-import com.github.ejitron.events.chat.DefaultUserCommands;
+import com.github.ejitron.chat.CommandTimer;
+import com.github.ejitron.chat.events.DefaultModCommands;
+import com.github.ejitron.chat.events.DefaultUserCommands;
 import com.github.ejitron.sql.channels.Channels;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
@@ -43,6 +44,9 @@ public class Bot {
 	
 	public void start() {
 		loadConfiguration();
+		
+		// Start the timer for command cooldowns
+		CommandTimer.startCooldown();
 		
 		Channels channels = new Channels();
 		List<String> joinedChannels = channels.getAddedChannels();
