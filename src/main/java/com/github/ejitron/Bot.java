@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.github.ejitron.events.chat.DefaultModCommands;
 import com.github.ejitron.events.chat.DefaultUserCommands;
-import com.github.ejitron.sql.Channels;
+import com.github.ejitron.sql.channels.Channels;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;

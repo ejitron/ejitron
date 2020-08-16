@@ -13,4 +13,4 @@ Open source Twitch chat bot
     * `git commit -m "Digested changelog"`
 4. Push to your branch
     * `git push origin my-feature`
-5. Create a new [Pull Request](https://github.com/ejitron/ejitron/compare)
+5. Create a new [Pull Request](https://github.com/ejitron/ejitron/compare/development..)

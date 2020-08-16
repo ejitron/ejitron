@@ -1,6 +1,7 @@
 package com.github.ejitron.events.chat;
 
 import com.github.ejitron.helix.ChannelInfo;
+import com.github.ejitron.sql.channels.Setting;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
 
@@ -16,6 +17,7 @@ public class DefaultModCommands {
 		String channel = e.getChannel().getName();
 		
 		Chat chat = new Chat();
+		Setting settings = new Setting();
 		
 		if(!chat.isModerator(e.getTags())) // These are mod/broadcaster only commands.
 			return;
@@ -24,7 +26,7 @@ public class DefaultModCommands {
 		 * !title
 		 * Gets/Sets the current title
 		 */
-		if(args[0].equalsIgnoreCase("!title")) {
+		if(args[0].equalsIgnoreCase("!title") && settings.getChannelSetting(channel, "title_cmd") == 1) {
 			ChannelInfo chanInfo = new ChannelInfo();
 			
 			if(args.length < 2) {
@@ -51,7 +53,7 @@ public class DefaultModCommands {
 		 * !game
 		 * Gets/Sets the current game
 		 */
-		if(args[0].equalsIgnoreCase("!game")) {
+		if(args[0].equalsIgnoreCase("!game") && settings.getChannelSetting(channel, "game_cmd") == 1) {
 			ChannelInfo chanInfo = new ChannelInfo();
 			
 			if(args.length < 2) {
