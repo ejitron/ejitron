@@ -8,14 +8,28 @@ import java.util.TimerTask;
 public class CommandTimer {
 	public static List<CommandCooldown> cooldownList = new ArrayList<CommandCooldown>();
 	
+	/**
+	 * Starts the cooldown timer.
+	 */
 	public static void startCooldown() {
 		cooldownTimer();
 	}
 	
+	/**
+	 * Adds a command to the cooldown list.
+	 * @param channel the channel the command was issued in
+	 * @param command the command to be added to a cooldown
+	 */
 	public static void addToCooldown(String channel, String command) {
 		cooldownList.add(new CommandCooldown(channel, command, 7));
 	}
 	
+	/**
+	 * Checks if the given command is in cooldown.
+	 * @param channel the channel to look in
+	 * @param command the command to look for
+	 * @return {@code true} if yes
+	 */
 	public static boolean isInCooldown(String channel, String command) {
 		for(int i = 0; i < cooldownList.size(); i++) {
 			String curChannel = cooldownList.get(i).getChannel();
