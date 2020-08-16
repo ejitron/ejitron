@@ -1,6 +1,7 @@
 package com.github.ejitron;
 
-import com.github.ejitron.events.chat.DefaultCommands;
+import com.github.ejitron.events.chat.DefaultModCommands;
+import com.github.ejitron.events.chat.DefaultUserCommands;
 import com.github.ejitron.sql.Channels;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
@@ -34,7 +35,8 @@ public class Bot {
 	
 	public void loadConfiguration() {
 		// Events
-		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultCommands());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultModCommands());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultUserCommands());
 	}
 	
 	public void start() {

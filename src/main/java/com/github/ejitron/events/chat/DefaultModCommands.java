@@ -4,10 +4,10 @@ import com.github.ejitron.helix.ChannelInfo;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
 
-public class DefaultCommands {
+public class DefaultModCommands {
 	
 	@EventSubscriber
-	public void onChat(IRCMessageEvent e) {
+	public void onModChat(IRCMessageEvent e) {
 		if(!e.getMessage().isPresent() || e.getUser() == null) // Return since this is most likely back-end messages sent in chat
 			return;
 		
@@ -20,6 +20,10 @@ public class DefaultCommands {
 		if(!chat.isModerator(e.getTags())) // These are mod/broadcaster only commands.
 			return;
 		
+		/*
+		 * !title
+		 * Gets/Sets the current title
+		 */
 		if(args[0].equalsIgnoreCase("!title")) {
 			ChannelInfo chanInfo = new ChannelInfo();
 			
@@ -43,6 +47,10 @@ public class DefaultCommands {
 			return;
 		}
 		
+		/*
+		 * !game
+		 * Gets/Sets the current game
+		 */
 		if(args[0].equalsIgnoreCase("!game")) {
 			ChannelInfo chanInfo = new ChannelInfo();
 			
@@ -65,6 +73,7 @@ public class DefaultCommands {
 			chat.sendMessage(channel, user + " Set the game to: " + game);
 			return;
 		}
+		
 	}
 	
 }
