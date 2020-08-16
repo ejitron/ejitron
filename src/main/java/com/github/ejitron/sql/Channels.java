@@ -29,6 +29,7 @@ public class Channels {
 
 			ResultSet result;
 			result = stmt.executeQuery("SELECT channel FROM channels;");
+			stmt.close();
 
 			List<String> channels = new ArrayList<String>();
 
@@ -64,6 +65,7 @@ public class Channels {
 			
 			ResultSet result;
 			result = pstmt.executeQuery();
+			pstmt.close();
 
 			String token = "";
 
