@@ -21,9 +21,8 @@ public class Chat {
 	 * @return {@code true} if yes
 	 */
 	public boolean isModerator(Map<String, String> tags) {
-		if(tags.containsKey("badges") && tags.get("badges") != null)
-			if(tags.get("badges").contains("broadcaster") || tags.get("badges").contains("moderator"))
-				return true;
+		if((tags.containsKey("badges") && tags.get("badges") != null) && (tags.get("badges").contains("broadcaster") || tags.get("badges").contains("moderator")))
+			return true;
 		
 		return false;
 	}
