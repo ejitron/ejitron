@@ -19,7 +19,6 @@ public class Channels {
 	 * @see #getChannelAccessToken(String)
 	 */
 	public List<String> getAddedChannels() {
-		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
@@ -27,6 +26,8 @@ public class Channels {
 					Credentials.DB_PASS.getValue());
 			
 			Statement stmt = con.createStatement();
+
+			ResultSet result;
 			result = stmt.executeQuery("SELECT channel FROM channels;");
 
 			List<String> channels = new ArrayList<String>();
@@ -52,7 +53,6 @@ public class Channels {
 	 * @return The access token, or {@code null} if failed
 	 */
 	public String getChannelAccessToken(String channel) {
-		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
@@ -61,6 +61,8 @@ public class Channels {
 			
 			PreparedStatement pstmt = con.prepareStatement("SELECT token FROM channels WHERE channel=?;");
 			pstmt.setString(1, channel);
+			
+			ResultSet result;
 			result = pstmt.executeQuery();
 
 			String token = "";
