@@ -2,9 +2,9 @@ package com.github.ejitron.chat;
 
 public class CommandCooldown {
 	
-	private String channel;
-	private String command;
-	private int cooldown;
+	private final String channel;
+	private final String command;
+	private final int cooldown;
 	
 	public CommandCooldown(String channel, String command, int cooldown) {
 		this.channel = channel;

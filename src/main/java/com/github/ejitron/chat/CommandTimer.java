@@ -8,6 +8,11 @@ import java.util.TimerTask;
 public class CommandTimer {
 	public static List<CommandCooldown> cooldownList = new ArrayList<CommandCooldown>();
 	
+	// Prevent instantiation
+	private CommandTimer() {
+		throw new UnsupportedOperationException();
+	}
+	
 	/**
 	 * Starts the cooldown timer.
 	 */
