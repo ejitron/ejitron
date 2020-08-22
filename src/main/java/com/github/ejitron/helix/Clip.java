@@ -1,7 +1,7 @@
 package com.github.ejitron.helix;
 
 import com.github.ejitron.Bot;
-import com.github.ejitron.sql.Channels;
+import com.github.ejitron.sql.channels.Channels;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.twitch4j.helix.domain.CreateClip;
 import com.github.twitch4j.helix.domain.CreateClipList;

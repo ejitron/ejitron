@@ -1,4 +1,4 @@
-package com.github.ejitron.events.chat;
+package com.github.ejitron.chat;
 
 import java.util.Map;
 

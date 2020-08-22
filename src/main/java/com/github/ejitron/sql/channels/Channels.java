@@ -1,4 +1,4 @@
-package com.github.ejitron.sql;
+package com.github.ejitron.sql.channels;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
