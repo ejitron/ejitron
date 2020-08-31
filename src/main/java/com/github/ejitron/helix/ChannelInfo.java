@@ -22,7 +22,7 @@ public class ChannelInfo {
 		Channels channels = new Channels();
 		Game game = new Game();
 		User user = new User();
-		OAuth2Credential oauth = new OAuth2Credential(channel, channels.getChannelAccessToken(channel));
+		OAuth2Credential oauth = channels.getChannelOAuth2(channel);
 		
 		ChannelInformation chanInfo = new ChannelInformation()
 				.withGameId(game.getGameId(gameName))

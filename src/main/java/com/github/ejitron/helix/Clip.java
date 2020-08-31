@@ -18,7 +18,7 @@ public class Clip {
 	public CreateClip createClip(String channel) throws HystrixRuntimeException {
 		Channels channels = new Channels();
 		User user = new User();
-		OAuth2Credential oauth = new OAuth2Credential(channel, channels.getChannelAccessToken(channel));
+		OAuth2Credential oauth = channels.getChannelOAuth2(channel);
 		
 		CreateClipList clipData = Bot.twitchClient.getHelix().createClip(oauth.getAccessToken(), user.getUserFromChannel(channel).getId(), false).execute();
 		

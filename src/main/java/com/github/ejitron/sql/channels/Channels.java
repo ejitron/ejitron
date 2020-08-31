@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.ejitron.Credentials;
+import com.github.ejitron.Identity;
+import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 
 public class Channels {
 	
@@ -51,6 +53,7 @@ public class Channels {
 	 * Retrieves the {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential} access token for the specified channel
 	 * @param channel a {@link java.lang.String String} channel name
 	 * @return The access token, or {@code null} if failed
+	 * @see #getChannelRefreshToken(String)
 	 */
 	public String getChannelAccessToken(String channel) {
 		ResultSet result;
@@ -80,5 +83,53 @@ public class Channels {
 			System.out.println(e);
 			return null;
 		}
+	}
+	
+	/**
+	 * Retrieves the {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential} refresh token for the specified channel
+	 * @param channel a {@link java.lang.String String} channel name
+	 * @return The <b>refresh</b> token, or {@code null} if failed
+	 * @see #getChannelAccessToken(String)
+	 */
+	public String getChannelRefreshToken(String channel) {
+		ResultSet result;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credentials.DB_USER.getValue(),
+					Credentials.DB_PASS.getValue());
+			
+			PreparedStatement pstmt = con.prepareStatement("SELECT refresh_token FROM channels WHERE channel=?;");
+			pstmt.setString(1, channel);
+			result = pstmt.executeQuery();
+
+			String token = "";
+
+			while (result.next()) {
+				token = result.getString(1);
+			}
+			
+			pstmt.close();
+			result.close();
+			con.close();
+
+			return token;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+	
+	/**
+	 * Retrieves the OAuth2 instance for the specified channel
+	 * @param channel a {@link java.lang.String String} channel name
+	 * @return a refreshed {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential}
+	 */
+	public OAuth2Credential getChannelOAuth2(String channel) {
+		OAuth2Credential oauth = new OAuth2Credential(channel, getChannelAccessToken(channel), getChannelRefreshToken(channel), null, null, null, null);
+		Identity identity = new Identity();
+		
+		return identity.getIdentityProvider().refreshCredential(oauth).get();
 	}
 }
