@@ -10,7 +10,11 @@ import java.util.List;
 
 import com.github.ejitron.Credentials;
 import com.github.ejitron.Identity;
+import com.github.ejitron.helix.User;
+import com.github.philippheuer.credentialmanager.CredentialManager;
+import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
+import com.github.philippheuer.credentialmanager.identityprovider.TwitchIdentityProvider;
 
 public class Channels {
 	
@@ -125,11 +129,40 @@ public class Channels {
 	 * Retrieves the OAuth2 instance for the specified channel
 	 * @param channel a {@link java.lang.String String} channel name
 	 * @return a refreshed {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential}
+	 * @see #refreshChannelOAuth2(String)
 	 */
 	public OAuth2Credential getChannelOAuth2(String channel) {
 		OAuth2Credential oauth = new OAuth2Credential(channel, getChannelAccessToken(channel), getChannelRefreshToken(channel), null, null, null, null);
-		Identity identity = new Identity();
 		
-		return identity.getIdentityProvider().refreshCredential(oauth).get();
+		Identity identity = new Identity();
+		TwitchIdentityProvider identityProvider = identity.getIdentityProvider();
+		
+		User user = new User();
+		String userId = user.getUserFromChannel(channel).getId();
+		
+		CredentialManager credentialManager = CredentialManagerBuilder.builder().build();
+		credentialManager.registerIdentityProvider(identityProvider);
+		credentialManager.addCredential(identityProvider.getProviderName(), oauth);
+		
+		return credentialManager.getOAuth2CredentialByUserId(userId).get();
+	}
+	
+	/**
+	 * Refreshes a channel {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential} and stores it.
+	 * @param channel a {@link java.lang.String String} channel name
+	 * @see #getChannelOAuth2(String)
+	 */
+	public void refreshChannelOAuth2(String channel) {
+		OAuth2Credential oauth = getChannelOAuth2(channel);
+		
+		Identity identity = new Identity();
+		TwitchIdentityProvider identityProvider = identity.getIdentityProvider();
+		
+		OAuth2Credential refreshed = identityProvider.refreshCredential(oauth).get();
+		
+		/*
+		 * TODO
+		 * Save the new access & refresh token
+		 */
 	}
 }
