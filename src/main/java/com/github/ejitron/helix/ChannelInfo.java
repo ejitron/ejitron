@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.jetbrains.annotations.Nullable;
 
 import com.github.ejitron.Bot;
-import com.github.ejitron.sql.channels.Channels;
+import com.github.ejitron.sql.channels.Channel;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.twitch4j.helix.domain.ChannelInformation;
 
@@ -19,7 +19,7 @@ public class ChannelInfo {
 	 * @see #getChannelInfo(String)
 	 */
 	public void setChannelInfo(String channel, @Nullable String gameName, @Nullable String title) {
-		Channels channels = new Channels();
+		Channel channels = new Channel();
 		Game game = new Game();
 		User user = new User();
 		OAuth2Credential oauth = channels.getChannelOAuth2(channel);

@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.ejitron.Credentials;
+import com.github.ejitron.Credential;
 import com.github.ejitron.Identity;
 import com.github.ejitron.helix.User;
 import com.github.philippheuer.credentialmanager.CredentialManager;
@@ -16,7 +16,7 @@ import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.credentialmanager.identityprovider.TwitchIdentityProvider;
 
-public class Channels {
+public class Channel {
 	
 	/**
 	 * Retrieves all the channels that registered the bot from the database.
@@ -28,9 +28,9 @@ public class Channels {
 		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-					Credentials.DB_USER.getValue(),
-					Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
 			
 			Statement stmt = con.createStatement();
 			result = stmt.executeQuery("SELECT channel FROM channels;");
@@ -63,9 +63,9 @@ public class Channels {
 		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-					Credentials.DB_USER.getValue(),
-					Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
 			
 			PreparedStatement pstmt = con.prepareStatement("SELECT access_token FROM channels WHERE channel=?;");
 			pstmt.setString(1, channel);
@@ -99,9 +99,9 @@ public class Channels {
 		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-					Credentials.DB_USER.getValue(),
-					Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
 			
 			PreparedStatement pstmt = con.prepareStatement("SELECT refresh_token FROM channels WHERE channel=?;");
 			pstmt.setString(1, channel);
@@ -162,9 +162,9 @@ public class Channels {
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-						Credentials.DB_USER.getValue(),
-						Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+						Credential.DB_USER.getValue(),
+						Credential.DB_PASS.getValue());
 
 			PreparedStatement pstmt = con.prepareStatement("UPDATE channels SET access_token=?, refresh_token=? WHERE channel=?");
 			pstmt.setString(1, refreshed.getAccessToken());

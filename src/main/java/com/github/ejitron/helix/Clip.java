@@ -1,7 +1,7 @@
 package com.github.ejitron.helix;
 
 import com.github.ejitron.Bot;
-import com.github.ejitron.sql.channels.Channels;
+import com.github.ejitron.sql.channels.Channel;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.twitch4j.helix.domain.CreateClip;
 import com.github.twitch4j.helix.domain.CreateClipList;
@@ -16,7 +16,7 @@ public class Clip {
 	 * @throws HystrixRuntimeException Channel is not live.
 	 */
 	public CreateClip createClip(String channel) throws HystrixRuntimeException {
-		Channels channels = new Channels();
+		Channel channels = new Channel();
 		User user = new User();
 		OAuth2Credential oauth = channels.getChannelOAuth2(channel);
 		

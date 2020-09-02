@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
 import com.github.ejitron.Bot;
-import com.github.ejitron.sql.channels.Channels;
+import com.github.ejitron.sql.channels.Channel;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.twitch4j.helix.domain.FollowList;
 import com.github.twitch4j.helix.domain.UserList;
@@ -31,7 +31,7 @@ public class User {
 	 * Or {@code null} if not following.
 	 */
 	public String getFollowAge(String user, String channel) {
-		Channels channels = new Channels();
+		Channel channels = new Channel();
 		OAuth2Credential oauth = channels.getChannelOAuth2(channel);
 		
 		FollowList resList = Bot.twitchClient.getHelix().getFollowers(oauth.getAccessToken(), getUserFromChannel(user).getId(), getUserFromChannel(channel).getId(), null, 1).execute();

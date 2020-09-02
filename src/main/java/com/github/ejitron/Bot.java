@@ -3,9 +3,9 @@ package com.github.ejitron;
 import java.util.List;
 
 import com.github.ejitron.chat.CommandTimer;
-import com.github.ejitron.chat.events.DefaultModCommands;
-import com.github.ejitron.chat.events.DefaultUserCommands;
-import com.github.ejitron.sql.channels.Channels;
+import com.github.ejitron.chat.events.DefaultModCommand;
+import com.github.ejitron.chat.events.DefaultUserCommand;
+import com.github.ejitron.sql.channels.Channel;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
@@ -18,7 +18,7 @@ public class Bot {
 	
 	public static TwitchClient twitchClient;
 	
-	public static OAuth2Credential chatOauth = new OAuth2Credential("ejitron", Credentials.BOT_OAUTH.getValue());
+	public static OAuth2Credential chatOauth = new OAuth2Credential("ejitron", Credential.BOT_OAUTH.getValue());
 	
 	/*
 	 * Constructor
@@ -38,8 +38,8 @@ public class Bot {
 	
 	public void loadConfiguration() {
 		// Events
-		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultModCommands());
-		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultUserCommands());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultModCommand());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultUserCommand());
 	}
 	
 	public void start() {
@@ -48,7 +48,7 @@ public class Bot {
 		// Start the timer for command cooldowns
 		CommandTimer.startCooldown();
 		
-		Channels channels = new Channels();
+		Channel channels = new Channel();
 		List<String> joinedChannels = channels.getAddedChannels();
 		
 		joinedChannels.forEach(channel -> {

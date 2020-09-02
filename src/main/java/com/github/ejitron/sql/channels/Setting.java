@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.github.ejitron.Credentials;
+import com.github.ejitron.Credential;
 
 public class Setting {
 	
@@ -19,9 +19,9 @@ public class Setting {
 		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-					Credentials.DB_USER.getValue(),
-					Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
 			
 			PreparedStatement pstmt = con.prepareStatement("SELECT `" + setting + "` FROM settings WHERE channel=?;");
 			pstmt.setString(1, channel);
