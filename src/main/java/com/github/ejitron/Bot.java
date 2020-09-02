@@ -54,6 +54,9 @@ public class Bot {
 		joinedChannels.forEach(channel -> {
 			if(!twitchClient.getChat().isChannelJoined(channel))
 				twitchClient.getChat().joinChannel(channel);
+			
+			// Refresh the auth token
+			channels.refreshChannelOAuth2(channel);
 		});
 	}
 	

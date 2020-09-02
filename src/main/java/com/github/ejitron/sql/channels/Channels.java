@@ -67,7 +67,7 @@ public class Channels {
 					Credentials.DB_USER.getValue(),
 					Credentials.DB_PASS.getValue());
 			
-			PreparedStatement pstmt = con.prepareStatement("SELECT token FROM channels WHERE channel=?;");
+			PreparedStatement pstmt = con.prepareStatement("SELECT access_token FROM channels WHERE channel=?;");
 			pstmt.setString(1, channel);
 			result = pstmt.executeQuery();
 
@@ -152,7 +152,7 @@ public class Channels {
 	 * @param channel a {@link java.lang.String String} channel name
 	 * @see #getChannelOAuth2(String)
 	 */
-	public void refreshChannelOAuth2(String channel) {
+	public boolean refreshChannelOAuth2(String channel) {
 		OAuth2Credential oauth = getChannelOAuth2(channel);
 		
 		Identity identity = new Identity();
@@ -160,9 +160,24 @@ public class Channels {
 		
 		OAuth2Credential refreshed = identityProvider.refreshCredential(oauth).get();
 		
-		/*
-		 * TODO
-		 * Save the new access & refresh token
-		 */
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
+						Credentials.DB_USER.getValue(),
+						Credentials.DB_PASS.getValue());
+
+			PreparedStatement pstmt = con.prepareStatement("UPDATE channels SET access_token=?, refresh_token=? WHERE channel=?");
+			pstmt.setString(1, refreshed.getAccessToken());
+			pstmt.setString(2, refreshed.getRefreshToken());
+			pstmt.setString(3, channel);
+			pstmt.executeUpdate();
+
+			con.close();
+
+			return true;
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
 	}
 }

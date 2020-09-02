@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CommandTimer {
+public final class CommandTimer {
 	public static List<CommandCooldown> cooldownList = new ArrayList<CommandCooldown>();
 	
 	// Prevent instantiation
