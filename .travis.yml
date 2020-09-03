@@ -1,7 +1,7 @@
 language: java
+before_script: cd ejitron
 jdk:
   - openjdk14
   - oraclejdk14
-script: build.sh
 notifications:
   email: false
