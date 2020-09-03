@@ -1,11 +1,18 @@
 package com.github.ejitron;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import com.github.ejitron.chat.CommandTimer;
-import com.github.ejitron.chat.events.DefaultModCommands;
-import com.github.ejitron.chat.events.DefaultUserCommands;
-import com.github.ejitron.sql.channels.Channels;
+import com.github.ejitron.chat.CustomCommand;
+import com.github.ejitron.chat.events.CustomCommandEvent;
+import com.github.ejitron.chat.events.DefaultModCommandEvent;
+import com.github.ejitron.chat.events.DefaultUserCommandEvent;
+import com.github.ejitron.oauth.Credential;
+import com.github.ejitron.oauth.RefreshToken;
+import com.github.ejitron.sql.channels.Channel;
+import com.github.ejitron.sql.channels.Command;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
@@ -18,7 +25,9 @@ public class Bot {
 	
 	public static TwitchClient twitchClient;
 	
-	public static OAuth2Credential chatOauth = new OAuth2Credential("ejitron", Credentials.BOT_OAUTH.getValue());
+	public static OAuth2Credential chatOauth = new OAuth2Credential("twitch", Credential.BOT_OAUTH.getValue());
+	
+	public static List<CustomCommand> customCommandsList = new ArrayList<CustomCommand>();
 	
 	/*
 	 * Constructor
@@ -38,8 +47,14 @@ public class Bot {
 	
 	public void loadConfiguration() {
 		// Events
-		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultModCommands());
-		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultUserCommands());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultModCommandEvent());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultUserCommandEvent());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new CustomCommandEvent());
+		
+		Command command = new Command();
+		command.getCustomCommands().forEach(customCommand -> {
+			customCommandsList.add(customCommand);
+		});
 	}
 	
 	public void start() {
@@ -48,7 +63,7 @@ public class Bot {
 		// Start the timer for command cooldowns
 		CommandTimer.startCooldown();
 		
-		Channels channels = new Channels();
+		Channel channels = new Channel();
 		List<String> joinedChannels = channels.getAddedChannels();
 		
 		joinedChannels.forEach(channel -> {
@@ -58,6 +73,10 @@ public class Bot {
 			// Refresh the auth token
 			channels.refreshChannelOAuth2(channel);
 		});
+		
+		// Make sure we keep updating the channel OAuth tokens
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new RefreshToken(), 1*60*1000, 1*60*1000);
 	}
 	
 }
