@@ -1,4 +1,4 @@
-package com.github.ejitron;
+package com.github.ejitron.oauth;
 
 public enum Credential {
 	BOT_OAUTH("bot_oauth"),
