@@ -1,11 +1,11 @@
-package com.github.ejitron.oauth;
+package com.github.ejitron;
 
 public enum Credential {
-	BOT_OAUTH("chat_oauth"),
+	BOT_OAUTH("bot_oauth"),
 	DB_HOST("host"),
 	DB_NAME("name"),
 	DB_USER("user"),
-	DB_PASS("pw");
+	DB_PASS("password");
 	
 	private String val;
 
@@ -14,7 +14,7 @@ public enum Credential {
 	}
 	
 	/**
-	 * Gets the value of the {@link com.github.ejitron.oauth.Credential Credential}
+	 * Gets the value of the {@link com.github.ejitron.Credential Credential}
 	 * @return {@link java.lang.String String} value of the credential
 	 */
 	public String getValue() {
