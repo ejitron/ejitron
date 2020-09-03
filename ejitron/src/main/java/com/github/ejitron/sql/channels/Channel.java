@@ -8,13 +8,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.ejitron.Credential;
-import com.github.ejitron.Identity;
-import com.github.ejitron.helix.User;
-import com.github.philippheuer.credentialmanager.CredentialManager;
-import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
+import com.github.ejitron.oauth.Credential;
+import com.github.ejitron.oauth.Identity;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
-import com.github.philippheuer.credentialmanager.identityprovider.TwitchIdentityProvider;
+import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 
 public class Channel {
 	
@@ -128,23 +125,16 @@ public class Channel {
 	/**
 	 * Retrieves the OAuth2 instance for the specified channel
 	 * @param channel a {@link java.lang.String String} channel name
-	 * @return a refreshed {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential}
+	 * @return a complete {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential}
 	 * @see #refreshChannelOAuth2(String)
 	 */
 	public OAuth2Credential getChannelOAuth2(String channel) {
-		OAuth2Credential oauth = new OAuth2Credential(channel, getChannelAccessToken(channel), getChannelRefreshToken(channel), null, null, null, null);
+		OAuth2Credential oauth = new OAuth2Credential("twitch", getChannelAccessToken(channel), getChannelRefreshToken(channel), null, null, null, null);
 		
 		Identity identity = new Identity();
 		TwitchIdentityProvider identityProvider = identity.getIdentityProvider();
 		
-		User user = new User();
-		String userId = user.getUserFromChannel(channel).getId();
-		
-		CredentialManager credentialManager = CredentialManagerBuilder.builder().build();
-		credentialManager.registerIdentityProvider(identityProvider);
-		credentialManager.addCredential(identityProvider.getProviderName(), oauth);
-		
-		return credentialManager.getOAuth2CredentialByUserId(userId).get();
+		return identityProvider.getAdditionalCredentialInformation(oauth).get();
 	}
 	
 	/**
@@ -159,6 +149,9 @@ public class Channel {
 		TwitchIdentityProvider identityProvider = identity.getIdentityProvider();
 		
 		OAuth2Credential refreshed = identityProvider.refreshCredential(oauth).get();
+		
+		// Revoke the old auth token
+		identity.getIdentityProvider().revokeCredential(oauth);
 		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

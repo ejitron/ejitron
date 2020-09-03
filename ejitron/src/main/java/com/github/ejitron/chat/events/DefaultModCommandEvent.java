@@ -7,7 +7,7 @@ import com.github.ejitron.sql.channels.Setting;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
 
-public class DefaultModCommand {
+public class DefaultModCommandEvent {
 	
 	@EventSubscriber
 	public void onModChat(IRCMessageEvent e) {

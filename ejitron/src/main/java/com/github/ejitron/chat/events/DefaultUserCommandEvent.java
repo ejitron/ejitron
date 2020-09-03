@@ -10,7 +10,7 @@ import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
 import com.github.twitch4j.helix.domain.CreateClip;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 
-public class DefaultUserCommand {
+public class DefaultUserCommandEvent {
 	
 	@EventSubscriber
 	public void onChat(IRCMessageEvent e) {

@@ -1,5 +1,6 @@
-.settings/
-src/test/
-target/
-.classpath
-.project
+ejitron/.settings/
+ejitron/src/test/
+ejitron/target/
+ejitron/.classpath
+ejitron/.project
+/.metadata/

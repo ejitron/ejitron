@@ -1,4 +1,5 @@
 language: java
+before_script: cd ejitron
 jdk:
   - openjdk14
   - oraclejdk14

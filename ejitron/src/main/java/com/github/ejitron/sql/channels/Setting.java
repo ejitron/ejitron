@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.github.ejitron.Credential;
+import com.github.ejitron.oauth.Credential;
 
 public class Setting {
 	
