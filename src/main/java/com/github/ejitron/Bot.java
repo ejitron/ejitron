@@ -76,7 +76,7 @@ public class Bot {
 		
 		// Make sure we keep updating the channel OAuth tokens
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new RefreshToken(), 1*60*1000, 1*60*1000);
+		timer.scheduleAtFixedRate(new RefreshToken(), 60*60*1000, 60*60*1000);
 	}
 	
 }
