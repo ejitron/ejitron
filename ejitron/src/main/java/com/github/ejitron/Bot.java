@@ -3,6 +3,7 @@ package com.github.ejitron;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
@@ -12,7 +13,7 @@ import com.github.ejitron.chat.events.DefaultUserCommandEvent;
 import com.github.ejitron.oauth.Credential;
 import com.github.ejitron.oauth.RefreshToken;
 import com.github.ejitron.sql.channels.Channel;
-import com.github.ejitron.sql.channels.Command;
+import com.github.ejitron.sql.commands.Command;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
@@ -77,6 +78,16 @@ public class Bot {
 		// Make sure we keep updating the channel OAuth tokens
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new RefreshToken(), 60*60*1000, 60*60*1000);
+		
+		// Update the local commands list
+		timer.scheduleAtFixedRate(new TimerTask() {
+			
+			@Override
+			public void run() {
+				Command command = new Command();
+				customCommandsList = command.getCustomCommands();
+			}
+		}, 15*1000, 15*1000);
 	}
 	
 }

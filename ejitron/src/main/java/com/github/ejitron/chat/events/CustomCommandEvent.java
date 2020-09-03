@@ -2,6 +2,7 @@ package com.github.ejitron.chat.events;
 
 import com.github.ejitron.Bot;
 import com.github.ejitron.chat.Chat;
+import com.github.ejitron.sql.commands.Command;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
 
@@ -44,16 +45,18 @@ public class CustomCommandEvent {
 		if(args.length < 3) // We need at least 3 total arguments to setup commands
 			return;
 		
+		Command command = new Command();
 		String setting = args[1];
 		
 		if(setting.equalsIgnoreCase("add")) {
 			// For this we need 4 arguments:
 			// 1. The command
 			// 2. The setting
-			// 3. Command name
+			// 3. Command name <--
 			// 4. Reply
 			if(args.length < 4) {
 				chat.sendMessage(channel, "@" + user + " not enough arguments!");
+				return;
 			}
 			
 			String name = args[2];
@@ -61,17 +64,84 @@ public class CustomCommandEvent {
 			for(int i = 3; i < args.length; i++) { // Build the reply
 				if(i == args.length-1) { // Don't include a space in the last word!
 					reply += args[i];
+					break;
 				}
 				
 				reply += args[i] + " ";
 			}
 			
-			/*
-			 * TODO
-			 * Save the command
-			 */
+			// Make sure the command doesn't exist yet!
+			if(command.commandExists(channel, name)) {
+				chat.sendMessage(channel, "@" + user + " That command already exists.");
+				return;
+			}
 			
-			chat.sendMessage(channel, "@" + user + " Saved the new command " + name + ": " + reply);
+			if(command.addCustomCommand(channel, name, reply)) {
+				chat.sendMessage(channel, "@" + user + " Saved the new command " + name);
+				return;
+			}
+			
+			chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
+			return;
+		}
+		
+		else if(setting.equalsIgnoreCase("edit")) {
+			// For this we need 4 arguments:
+			// 1. The command
+			// 2. The setting
+			// 3. Command name <--
+			// 4. A new reply
+			if(args.length < 4) {
+				chat.sendMessage(channel, "@" + user + " not enough arguments!");
+				return;
+			}
+			
+			String name = args[2];
+			String newReply = "";
+			for(int i = 3; i < args.length; i++) { // Build the reply
+				if(i == args.length-1) { // Don't include a space in the last word!
+					newReply += args[i];
+					break;
+				}
+				
+				newReply += args[i] + " ";
+			}
+			
+			// Make sure the command exist!
+			if(!command.commandExists(channel, name)) {
+				chat.sendMessage(channel, "@" + user + " That command does not exist.");
+				return;
+			}
+			
+			if(command.editCustomCommand(channel, name, newReply)) {
+				chat.sendMessage(channel, "@" + user + " Saved the command " + name);
+				return;
+			}
+			
+			chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
+			return;
+		}
+		
+		else if(setting.equalsIgnoreCase("delete")) {
+			// For this we need 3 arguments:
+			// 1. The command
+			// 2. The setting
+			// 3. Command name <--
+
+			String name = args[2];
+			
+			// Make sure the command exist!
+			if(!command.commandExists(channel, name)) {
+				chat.sendMessage(channel, "@" + user + " That command does not exist.");
+				return;
+			}
+			
+			if(command.deleteCustomCommand(channel, name)) {
+				chat.sendMessage(channel, "@" + user + " Successfully deleted the command " + name + ".");
+				return;
+			}
+			
+			chat.sendMessage(channel, "@" + user + " Could not delete the command " + name + ". Try again later!");
 			return;
 		}
 	}
