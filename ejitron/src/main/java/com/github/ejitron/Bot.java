@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
+import com.github.ejitron.chat.WatchTimer;
 import com.github.ejitron.chat.events.CustomCommandEvent;
 import com.github.ejitron.chat.events.DefaultModCommandEvent;
 import com.github.ejitron.chat.events.DefaultUserCommandEvent;
@@ -88,6 +89,9 @@ public class Bot {
 				customCommandsList = command.getCustomCommands();
 			}
 		}, 15*1000, 15*1000);
+		
+		// Timer thread for watchtime
+		timer.scheduleAtFixedRate(new WatchTimer(), 60*1000, 60*1000);
 	}
 	
 }
