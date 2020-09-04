@@ -63,6 +63,16 @@ public class DefaultUserCommandEvent {
 			chat.sendMessage(channel, author + " has been following " + channel + " for " + age + ".");
 			return;
 		}
+		
+		/*
+		 * !watchtime
+		 * Retrieves the total time a user has watched the stream since the bot was added
+		 */
+		if(args[0].equalsIgnoreCase("!watchtime") && settings.getChannelSetting(channel, "watchtime") == 1) {
+			/*
+			 * Retrieve the watch time
+			 */
+		}
 	}
 	
 }
