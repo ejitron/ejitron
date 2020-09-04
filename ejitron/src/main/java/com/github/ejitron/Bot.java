@@ -7,10 +7,11 @@ import java.util.TimerTask;
 
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
-import com.github.ejitron.chat.WatchTimer;
 import com.github.ejitron.chat.events.CustomCommandEvent;
 import com.github.ejitron.chat.events.DefaultModCommandEvent;
 import com.github.ejitron.chat.events.DefaultUserCommandEvent;
+import com.github.ejitron.chat.user.WatchTime;
+import com.github.ejitron.chat.user.WatchTimer;
 import com.github.ejitron.oauth.Credential;
 import com.github.ejitron.oauth.RefreshToken;
 import com.github.ejitron.sql.channels.Channel;
@@ -30,6 +31,7 @@ public class Bot {
 	public static OAuth2Credential chatOauth = new OAuth2Credential("twitch", Credential.BOT_OAUTH.getValue());
 	
 	public static List<CustomCommand> customCommandsList = new ArrayList<CustomCommand>();
+	public static List<WatchTime> watchTimeList = new ArrayList<WatchTime>();
 	
 	/*
 	 * Constructor
@@ -68,6 +70,7 @@ public class Bot {
 		Channel channels = new Channel();
 		List<String> joinedChannels = channels.getAddedChannels();
 		
+		// Loop through all registered channels and join
 		joinedChannels.forEach(channel -> {
 			if(!twitchClient.getChat().isChannelJoined(channel))
 				twitchClient.getChat().joinChannel(channel);
