@@ -65,7 +65,7 @@ public class WatchTimeListing {
 					Credential.DB_PASS.getValue());
 			
 			Statement stmt = con.createStatement();
-			result = stmt.executeQuery("SELECT channel,user,minutes FROM watchtime;");
+			result = stmt.executeQuery("SELECT lurker FROM lurkers;");
 
 			List<String> lurkers = new ArrayList<String>();
 
@@ -100,10 +100,11 @@ public class WatchTimeListing {
 						Credential.DB_USER.getValue(),
 						Credential.DB_PASS.getValue());
 
-			PreparedStatement pstmt = con.prepareStatement("UPDATE watchtime SET user=?, minutes=? WHERE channel=?");
+			PreparedStatement pstmt = con.prepareStatement("UPDATE watchtime SET user=?, minutes=? WHERE channel=? AND user=?");
 			pstmt.setString(1, user);
 			pstmt.setInt(2, minutes);
 			pstmt.setString(3, channel);
+			pstmt.setString(4, user);
 			pstmt.executeUpdate();
 
 			con.close();

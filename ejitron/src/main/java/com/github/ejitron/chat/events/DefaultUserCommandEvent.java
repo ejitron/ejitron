@@ -71,6 +71,12 @@ public class DefaultUserCommandEvent {
 		 * Retrieves the total time a user has watched the stream since the bot was added
 		 */
 		if(args[0].equalsIgnoreCase("!watchtime") && settings.getChannelSetting(channel, "watchtime") == 1) {
+			// The broadcaster can't get a watch time of themselves
+			if(channel.equalsIgnoreCase(author)) {
+				chat.sendMessage(channel, author + " You don't have a watchtime of yourself.");
+				return;
+			}
+			
 			WatchTime userWatchTime = null;
 			for(int i = 0; i < Bot.watchTimeList.size(); i++) {
 				WatchTime current = Bot.watchTimeList.get(i);
