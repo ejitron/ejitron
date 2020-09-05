@@ -2,6 +2,7 @@ package com.github.ejitron.threads;
 
 import java.util.TimerTask;
 
+import com.github.ejitron.channels.AddChannel;
 import com.github.ejitron.chat.user.WatchTimer;
 
 public class Minute extends TimerTask {
@@ -10,6 +11,7 @@ public class Minute extends TimerTask {
 	@Override
 	public void run() {
 		WatchTimer watchTimer = new WatchTimer();
+		AddChannel addChannel = new AddChannel();
 	}
 
 }
