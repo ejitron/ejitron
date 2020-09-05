@@ -1,13 +1,10 @@
 package com.github.ejitron.oauth;
 
-import java.util.TimerTask;
-
 import com.github.ejitron.sql.channels.Channel;
 
-public class RefreshToken extends TimerTask {
+public class RefreshToken {
 
-	@Override
-	public void run() {
+	public RefreshToken() {
 		Channel channel = new Channel();
 		
 		// Refresh the tokens for each channel added!

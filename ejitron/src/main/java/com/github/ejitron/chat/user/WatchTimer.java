@@ -1,7 +1,6 @@
 package com.github.ejitron.chat.user;
 
 import java.util.List;
-import java.util.TimerTask;
 
 import com.github.ejitron.Bot;
 import com.github.ejitron.helix.Stream;
@@ -10,10 +9,9 @@ import com.github.ejitron.sql.channels.Setting;
 import com.github.ejitron.sql.user.WatchTimeListing;
 import com.github.twitch4j.tmi.domain.Chatters;
 
-public class WatchTimer extends TimerTask {
+public class WatchTimer {
 
-	@Override
-	public void run() {
+	public WatchTimer() {
 		Stream stream = new Stream();
 		Setting setting = new Setting();
 		Channel channel = new Channel();

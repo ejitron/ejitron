@@ -11,11 +11,11 @@ import com.github.ejitron.chat.events.CustomCommandEvent;
 import com.github.ejitron.chat.events.DefaultModCommandEvent;
 import com.github.ejitron.chat.events.DefaultUserCommandEvent;
 import com.github.ejitron.chat.user.WatchTime;
-import com.github.ejitron.chat.user.WatchTimer;
 import com.github.ejitron.oauth.Credential;
-import com.github.ejitron.oauth.RefreshToken;
 import com.github.ejitron.sql.channels.Channel;
 import com.github.ejitron.sql.commands.Command;
+import com.github.ejitron.threads.Hour;
+import com.github.ejitron.threads.Minute;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.core.EventManager;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
@@ -81,7 +81,10 @@ public class Bot {
 		
 		// Make sure we keep updating the channel OAuth tokens
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new RefreshToken(), 60*60*1000, 60*60*1000);
+		// Timer thread for each hour
+		timer.scheduleAtFixedRate(new Hour(), 60*60*1000, 60*60*1000);
+		// Timer thread for each minute
+		timer.scheduleAtFixedRate(new Minute(), 60*1000, 60*1000);
 		
 		// Update the local commands list
 		timer.scheduleAtFixedRate(new TimerTask() {
@@ -93,8 +96,6 @@ public class Bot {
 			}
 		}, 15*1000, 15*1000);
 		
-		// Timer thread for watchtime
-		timer.scheduleAtFixedRate(new WatchTimer(), 60*1000, 60*1000);
 	}
 	
 }
