@@ -19,6 +19,6 @@ public class Stream {
 				Arrays.asList(channel))
 				.execute();
 		
-		return streamList.getStreams().get(0);
+		return (streamList.getStreams().size() > 0 ? streamList.getStreams().get(0) : null);
 	}
 }

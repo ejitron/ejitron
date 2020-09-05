@@ -14,8 +14,8 @@ import com.github.ejitron.oauth.Credential;
 public class WatchTimeListing {
 	
 	/**
-	 * TODO Document
-	 * @return
+	 * Retrieves all saved watchtime as a {@link java.util.List List}
+	 * @return a {@link java.util.List List} containing all saved {@link com.github.ejitron.chat.user.WatchTime WatchTime}
 	 */
 	public List<WatchTime> getSavedWatchTime() {
 		ResultSet result;
@@ -53,8 +53,8 @@ public class WatchTimeListing {
 	}
 	
 	/**
-	 * TODO Document
-	 * @return
+	 * Retrieves a list of all known lurkers, bots and other accounts we don't want to record!
+	 * @return a {@link java.util.List List} containing lurker names
 	 */
 	public List<String> getKnownLurkers() {
 		ResultSet result;
@@ -86,11 +86,12 @@ public class WatchTimeListing {
 	}
 	
 	/**
-	 * TODO Document
-	 * @param channel
-	 * @param user
-	 * @param minutes
-	 * @return
+	 * Sets the saved watch time for a specific user in a specific channel.
+	 * @param channel a channel name
+	 * @param user the name of the user
+	 * @param minutes the total watched minutes in {@link java.lang.Integer Integer}
+	 * @return {@code true} if success
+	 * @see #addWatchTime(String, String, int)
 	 */
 	public boolean setWatchTime(String channel, String user, int minutes) {
 		try {
@@ -115,11 +116,12 @@ public class WatchTimeListing {
 	}
 	
 	/**
-	 * TODO Document
-	 * @param channel
-	 * @param user
-	 * @param minutes
-	 * @return
+	 * Adds a new user to the saved watch time list.
+	 * @param channel a channel name
+	 * @param user the user name
+	 * @param minutes the total minutes watched as a {@link java.lang.Integer Integer}
+	 * @return {@code true} if success
+	 * @see #setWatchTime(String, String, int)
 	 */
 	public boolean addWatchTime(String channel, String user, int minutes) {
 		try {
