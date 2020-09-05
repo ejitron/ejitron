@@ -54,6 +54,39 @@ public class WatchTimeListing {
 	
 	/**
 	 * TODO Document
+	 * @return
+	 */
+	public List<String> getKnownLurkers() {
+		ResultSet result;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
+			
+			Statement stmt = con.createStatement();
+			result = stmt.executeQuery("SELECT channel,user,minutes FROM watchtime;");
+
+			List<String> lurkers = new ArrayList<String>();
+
+			while (result.next()) {
+				lurkers.add(result.getString(1));
+			}
+			
+			stmt.close();
+			result.close();
+			con.close();
+
+			return lurkers;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+	
+	/**
+	 * TODO Document
 	 * @param channel
 	 * @param user
 	 * @param minutes

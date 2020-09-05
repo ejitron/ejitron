@@ -17,6 +17,7 @@ public class WatchTimer extends TimerTask {
 		Stream stream = new Stream();
 		Setting setting = new Setting();
 		Channel channel = new Channel();
+		WatchTimeListing watchTimeListing = new WatchTimeListing();
 		List<String> joinedChannels = channel.getAddedChannels();
 		List<WatchTime> watchList = Bot.watchTimeList;
 		
@@ -28,10 +29,7 @@ public class WatchTimer extends TimerTask {
 				Chatters chatList = Bot.twitchClient.getMessagingInterface().getChatters(ch).execute();
 				
 				chatList.getAllViewers().forEach(viewer -> {
-					/*
-					 * TODO Remove known lurkers
-					 */
-					if(viewer.equalsIgnoreCase(ch))
+					if(watchTimeListing.getKnownLurkers().contains(viewer) || viewer.equalsIgnoreCase(ch)) // Don't record known lurkers, or the channel broadcaster
 						return;
 					
 					for(int i = 0; i < watchList.size(); i++) {
@@ -48,7 +46,6 @@ public class WatchTimer extends TimerTask {
 		
 		Bot.watchTimeList = watchList; // Update the watch list to our modified one
 		
-		WatchTimeListing watchTimeListing = new WatchTimeListing();
 		List<WatchTime> savedWatchTime = watchTimeListing.getSavedWatchTime();
 		
 		watchList.forEach(c -> {
