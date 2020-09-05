@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.github.ejitron.channels.AddChannel;
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
 import com.github.ejitron.chat.events.CustomCommandEvent;
@@ -71,12 +72,9 @@ public class Bot {
 		List<String> joinedChannels = channels.getAddedChannels();
 		
 		// Loop through all registered channels and join
+		AddChannel addChannel = new AddChannel();
 		joinedChannels.forEach(channel -> {
-			if(!twitchClient.getChat().isChannelJoined(channel))
-				twitchClient.getChat().joinChannel(channel);
-			
-			// Refresh the auth token
-			channels.refreshChannelOAuth2(channel);
+			addChannel.joinChannel(channel);
 		});
 		
 		// Make sure we keep updating the channel OAuth tokens
