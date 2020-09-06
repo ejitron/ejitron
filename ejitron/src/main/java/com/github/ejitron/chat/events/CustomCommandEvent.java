@@ -31,10 +31,8 @@ public class CustomCommandEvent {
 			}
 		});
 		
-		if(!chat.isModerator(e.getTags())) // Don't continue this unless the user is a moderator or broadcaster
-			return;
-		
-		if(!args[0].equalsIgnoreCase("!cmd")) // Only listen to !cmd from this point on
+		if(!chat.isModerator(e.getTags()) // Don't continue this unless the user is a moderator or broadcaster
+				&& !args[0].equalsIgnoreCase("!cmd")) // Only listen to !cmd from this point on
 			return;
 		
 		if(args.length == 1) { // Basic channel-command list
@@ -45,7 +43,6 @@ public class CustomCommandEvent {
 		if(args.length < 3) // We need at least 3 total arguments to setup commands
 			return;
 		
-		Command command = new Command();
 		String setting = args[1];
 		
 		if("add".equalsIgnoreCase(setting)) {
@@ -59,6 +56,7 @@ public class CustomCommandEvent {
 				return;
 			}
 			
+			
 			String name = args[2];
 			String reply = "";
 			for(int i = 3; i < args.length; i++) { // Build the reply
@@ -69,19 +67,8 @@ public class CustomCommandEvent {
 				
 				reply += args[i] + " ";
 			}
-			
-			// Make sure the command doesn't exist yet!
-			if(command.commandExists(channel, name)) {
-				chat.sendMessage(channel, "@" + user + " That command already exists.");
-				return;
-			}
-			
-			if(command.addCustomCommand(channel, name, reply)) {
-				chat.sendMessage(channel, "@" + user + " Saved the new command " + name);
-				return;
-			}
-			
-			chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
+
+			addCommand(channel, user, name, reply);
 			return;
 		}
 		
@@ -107,18 +94,7 @@ public class CustomCommandEvent {
 				newReply += args[i] + " ";
 			}
 			
-			// Make sure the command exist!
-			if(!command.commandExists(channel, name)) {
-				chat.sendMessage(channel, "@" + user + " That command does not exist.");
-				return;
-			}
-			
-			if(command.editCustomCommand(channel, name, newReply)) {
-				chat.sendMessage(channel, "@" + user + " Saved the command " + name);
-				return;
-			}
-			
-			chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
+			editCommand(channel, user, name, newReply);
 			return;
 		}
 		
@@ -130,20 +106,63 @@ public class CustomCommandEvent {
 
 			String name = args[2];
 			
-			// Make sure the command exist!
-			if(!command.commandExists(channel, name)) {
-				chat.sendMessage(channel, "@" + user + " That command does not exist.");
-				return;
-			}
-			
-			if(command.deleteCustomCommand(channel, name)) {
-				chat.sendMessage(channel, "@" + user + " Successfully deleted the command " + name + ".");
-				return;
-			}
-			
-			chat.sendMessage(channel, "@" + user + " Could not delete the command " + name + ". Try again later!");
+			deleteCommand(channel, user, name);
 			return;
 		}
+	}
+	
+	public void addCommand(String channel, String user, String name, String reply) {
+		Command command = new Command();
+		Chat chat = new Chat();
+		
+		// Make sure the command doesn't exist yet!
+		if(command.commandExists(channel, name)) {
+			chat.sendMessage(channel, "@" + user + " That command already exists.");
+			return;
+		}
+		
+		if(command.addCustomCommand(channel, name, reply)) {
+			chat.sendMessage(channel, "@" + user + " Saved the new command " + name);
+			return;
+		}
+		
+		chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
+	}
+	
+	public void editCommand(String channel, String user, String name, String newReply) {
+		Command command = new Command();
+		Chat chat = new Chat();
+		
+		// Make sure the command exist!
+		if(!command.commandExists(channel, name)) {
+			chat.sendMessage(channel, "@" + user + " That command does not exist.");
+			return;
+		}
+		
+		if(command.editCustomCommand(channel, name, newReply)) {
+			chat.sendMessage(channel, "@" + user + " Saved the command " + name);
+			return;
+		}
+		
+		chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
+	}
+	
+	public void deleteCommand(String channel, String user, String name) {
+		Command command = new Command();
+		Chat chat = new Chat();
+		
+		// Make sure the command exist!
+		if(!command.commandExists(channel, name)) {
+			chat.sendMessage(channel, "@" + user + " That command does not exist.");
+			return;
+		}
+		
+		if(command.deleteCustomCommand(channel, name)) {
+			chat.sendMessage(channel, "@" + user + " Successfully deleted the command " + name + ".");
+			return;
+		}
+		
+		chat.sendMessage(channel, "@" + user + " Could not delete the command " + name + ". Try again later!");
 	}
 	
 }
