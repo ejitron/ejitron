@@ -64,12 +64,10 @@ public class WatchTimer {
 			for(int i = 0; i < savedWatchTime.size(); i++) {
 				WatchTime current = savedWatchTime.get(i);
 				
-				if(current.getChannel().equalsIgnoreCase(cl.getChannel()) && current.getUser().equalsIgnoreCase(cl.getUser())) {
-					if(current.getMinutes() != cl.getMinutes()) { // If stored watchtime is different, save the current one!
-						watchTimeListing.setWatchTime(cl.getChannel(), cl.getUser(), cl.getMinutes());
-						userDone = true;
-						return;
-					}
+				if(current.getChannel().equalsIgnoreCase(cl.getChannel()) && current.getUser().equalsIgnoreCase(cl.getUser()) && current.getMinutes() != cl.getMinutes()) { // If stored watchtime is different, save the current one!
+					watchTimeListing.setWatchTime(cl.getChannel(), cl.getUser(), cl.getMinutes());
+					userDone = true;
+					return;
 				}
 			}
 			

@@ -48,7 +48,7 @@ public class CustomCommandEvent {
 		Command command = new Command();
 		String setting = args[1];
 		
-		if(setting.equalsIgnoreCase("add")) {
+		if("add".equalsIgnoreCase(setting)) {
 			// For this we need 4 arguments:
 			// 1. The command
 			// 2. The setting
@@ -85,7 +85,7 @@ public class CustomCommandEvent {
 			return;
 		}
 		
-		else if(setting.equalsIgnoreCase("edit")) {
+		else if("edit".equalsIgnoreCase(setting)) {
 			// For this we need 4 arguments:
 			// 1. The command
 			// 2. The setting
@@ -122,7 +122,7 @@ public class CustomCommandEvent {
 			return;
 		}
 		
-		else if(setting.equalsIgnoreCase("delete")) {
+		else if("delete".equalsIgnoreCase(setting)) {
 			// For this we need 3 arguments:
 			// 1. The command
 			// 2. The setting
