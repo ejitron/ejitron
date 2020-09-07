@@ -31,7 +31,10 @@ public class WatchTimer {
 		updateStoredList(watchTimeListing); // Update the database list
 	}
 	
-	public void updateLocalList(String ch, WatchTimeListing watchTimeListing) {
+	/*
+	 * Updates the local watch time list on the user(s) and channel(s) that have been affected
+	 */
+	private void updateLocalList(String ch, WatchTimeListing watchTimeListing) {
 		Setting setting = new Setting();
 		if(setting.getChannelSetting(ch, "watchtime") == 1) { // Make sure the watchtime setting is enabled
 			Chatters chatList = Bot.twitchClient.getMessagingInterface().getChatters(ch).execute();
@@ -64,7 +67,11 @@ public class WatchTimer {
 		}
 	}
 	
-	public void updateStoredList(WatchTimeListing watchTimeListing) {
+	/*
+	 * Updates the list stored in the database.
+	 * Only modified entries are updated
+	 */
+	private void updateStoredList(WatchTimeListing watchTimeListing) {
 		List<WatchTime> savedWatchTime = watchTimeListing.getSavedWatchTime();
 		
 		watchList.forEach(cl -> {
