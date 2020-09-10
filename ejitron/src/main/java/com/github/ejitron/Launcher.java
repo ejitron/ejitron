@@ -1,6 +1,6 @@
 package com.github.ejitron;
 
-public class Launcher {
+public final class Launcher {
 	
 	private Launcher() {}
 	

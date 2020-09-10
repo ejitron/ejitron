@@ -35,19 +35,17 @@ public class CustomCommandEvent {
 		if(args.length < 3) // We need at least 3 total arguments to setup commands
 			return;
 		
-		String setting = args[1];
-		
-		if("add".equalsIgnoreCase(setting)) {
+		if("add".equalsIgnoreCase(args[1])) {
 			addCommand(args, channel, user);
 			return;
 		}
 		
-		else if("edit".equalsIgnoreCase(setting)) {
+		else if("edit".equalsIgnoreCase(args[1])) {
 			editCommand(args, channel, user);
 			return;
 		}
 		
-		else if("delete".equalsIgnoreCase(setting)) {
+		else if("delete".equalsIgnoreCase(args[1])) {
 			deleteCommand(args, channel, user);
 			return;
 		}

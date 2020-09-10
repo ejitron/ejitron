@@ -11,7 +11,7 @@ import com.github.twitch4j.tmi.domain.Chatters;
 
 public class WatchTimer {
 	
-	private List<WatchTime> watchList = Bot.watchTimeList;
+	private final List<WatchTime> watchList = Bot.watchTimeList;
 
 	public WatchTimer() {
 		Stream stream = new Stream();
