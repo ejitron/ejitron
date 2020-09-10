@@ -2,6 +2,14 @@
 	Thanks for using and contributing to Ejitron.
  	Before you submit a pull request, please read the Contributing guidelines.
  	We do not answer questions via Pull Requests.
+
+ 	Make sure to format the title of the PR like so:
+ 	- New feature(s):
+ 		feat: yourfeature
+ 	- Bug fix:
+ 		fix: yourfix
+
+ 	Also please use the correct label that fits your PR.
 -->
 ### Prerequisites for Code Changes
 * [ ] This pull request follows the code style of the project

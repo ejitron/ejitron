@@ -1,6 +1,6 @@
-package com.github.ejitron;
+package com.github.ejitron.oauth;
 
-import com.github.philippheuer.credentialmanager.identityprovider.TwitchIdentityProvider;
+import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 
 public class Identity {
 	private final TwitchIdentityProvider identityProvider = new TwitchIdentityProvider("client_id", "client_secret", "redirect_uri");

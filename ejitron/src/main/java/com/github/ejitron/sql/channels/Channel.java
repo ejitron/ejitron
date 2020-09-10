@@ -8,15 +8,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.ejitron.Credentials;
-import com.github.ejitron.Identity;
-import com.github.ejitron.helix.User;
-import com.github.philippheuer.credentialmanager.CredentialManager;
-import com.github.philippheuer.credentialmanager.CredentialManagerBuilder;
+import com.github.ejitron.oauth.Credential;
+import com.github.ejitron.oauth.Identity;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
-import com.github.philippheuer.credentialmanager.identityprovider.TwitchIdentityProvider;
+import com.github.twitch4j.auth.providers.TwitchIdentityProvider;
 
-public class Channels {
+public class Channel {
 	
 	/**
 	 * Retrieves all the channels that registered the bot from the database.
@@ -28,9 +25,9 @@ public class Channels {
 		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-					Credentials.DB_USER.getValue(),
-					Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
 			
 			Statement stmt = con.createStatement();
 			result = stmt.executeQuery("SELECT channel FROM channels;");
@@ -63,9 +60,9 @@ public class Channels {
 		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-					Credentials.DB_USER.getValue(),
-					Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
 			
 			PreparedStatement pstmt = con.prepareStatement("SELECT access_token FROM channels WHERE channel=?;");
 			pstmt.setString(1, channel);
@@ -99,9 +96,9 @@ public class Channels {
 		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-					Credentials.DB_USER.getValue(),
-					Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
 			
 			PreparedStatement pstmt = con.prepareStatement("SELECT refresh_token FROM channels WHERE channel=?;");
 			pstmt.setString(1, channel);
@@ -128,23 +125,16 @@ public class Channels {
 	/**
 	 * Retrieves the OAuth2 instance for the specified channel
 	 * @param channel a {@link java.lang.String String} channel name
-	 * @return a refreshed {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential}
+	 * @return a complete {@link com.github.philippheuer.credentialmanager.domain.OAuth2Credential OAuth2Credential}
 	 * @see #refreshChannelOAuth2(String)
 	 */
 	public OAuth2Credential getChannelOAuth2(String channel) {
-		OAuth2Credential oauth = new OAuth2Credential(channel, getChannelAccessToken(channel), getChannelRefreshToken(channel), null, null, null, null);
+		OAuth2Credential oauth = new OAuth2Credential("twitch", getChannelAccessToken(channel), getChannelRefreshToken(channel), null, null, null, null);
 		
 		Identity identity = new Identity();
 		TwitchIdentityProvider identityProvider = identity.getIdentityProvider();
 		
-		User user = new User();
-		String userId = user.getUserFromChannel(channel).getId();
-		
-		CredentialManager credentialManager = CredentialManagerBuilder.builder().build();
-		credentialManager.registerIdentityProvider(identityProvider);
-		credentialManager.addCredential(identityProvider.getProviderName(), oauth);
-		
-		return credentialManager.getOAuth2CredentialByUserId(userId).get();
+		return identityProvider.getAdditionalCredentialInformation(oauth).get();
 	}
 	
 	/**
@@ -160,11 +150,14 @@ public class Channels {
 		
 		OAuth2Credential refreshed = identityProvider.refreshCredential(oauth).get();
 		
+		// Revoke the old auth token
+		identity.getIdentityProvider().revokeCredential(oauth);
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credentials.DB_HOST.getValue() + ":3306/" + Credentials.DB_NAME.getValue() + "?serverTimezone=UTC",
-						Credentials.DB_USER.getValue(),
-						Credentials.DB_PASS.getValue());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+						Credential.DB_USER.getValue(),
+						Credential.DB_PASS.getValue());
 
 			PreparedStatement pstmt = con.prepareStatement("UPDATE channels SET access_token=?, refresh_token=? WHERE channel=?");
 			pstmt.setString(1, refreshed.getAccessToken());

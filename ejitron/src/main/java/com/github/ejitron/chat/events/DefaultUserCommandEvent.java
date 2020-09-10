@@ -1,7 +1,9 @@
 package com.github.ejitron.chat.events;
 
+import com.github.ejitron.Bot;
 import com.github.ejitron.chat.Chat;
 import com.github.ejitron.chat.CommandTimer;
+import com.github.ejitron.chat.user.WatchTime;
 import com.github.ejitron.helix.Clip;
 import com.github.ejitron.helix.User;
 import com.github.ejitron.sql.channels.Setting;
@@ -10,7 +12,7 @@ import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
 import com.github.twitch4j.helix.domain.CreateClip;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
 
-public class DefaultUserCommands {
+public class DefaultUserCommandEvent {
 	
 	@EventSubscriber
 	public void onChat(IRCMessageEvent e) {
@@ -61,6 +63,38 @@ public class DefaultUserCommands {
 			}
 			
 			chat.sendMessage(channel, author + " has been following " + channel + " for " + age + ".");
+			return;
+		}
+		
+		/*
+		 * !watchtime
+		 * Retrieves the total time a user has watched the stream since the bot was added
+		 */
+		if(args[0].equalsIgnoreCase("!watchtime") && settings.getChannelSetting(channel, "watchtime") == 1) {
+			// The broadcaster can't get a watch time of themselves
+			if(channel.equalsIgnoreCase(author)) {
+				chat.sendMessage(channel, author + " You don't have a watchtime of yourself.");
+				return;
+			}
+			
+			WatchTime userWatchTime = null;
+			for(int i = 0; i < Bot.watchTimeList.size(); i++) {
+				WatchTime current = Bot.watchTimeList.get(i);
+				
+				if(current.getChannel().equalsIgnoreCase(channel) && current.getUser().equalsIgnoreCase(author))
+					userWatchTime = current;
+			}
+			
+			int total = (userWatchTime == null ? 0 : userWatchTime.getMinutes());
+			int d = total / 24 / 60;
+			int h = total / 60 % 24;
+			int m = total % 60;
+			
+			if(d > 0)
+				chat.sendMessage(channel, author + " has watched " + channel + "'s stream for " + d + " days, " + h + " hours and " + m + " minutes.");
+			else
+				chat.sendMessage(channel, author + " has watched " + channel + "'s stream for " + h + " hours and " + m + " minutes.");
+			
 			return;
 		}
 	}
