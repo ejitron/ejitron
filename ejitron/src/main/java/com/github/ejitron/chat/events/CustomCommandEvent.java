@@ -2,6 +2,7 @@ package com.github.ejitron.chat.events;
 
 import com.github.ejitron.Bot;
 import com.github.ejitron.chat.Chat;
+import com.github.ejitron.chat.CustomCommand;
 import com.github.ejitron.sql.commands.Command;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
@@ -19,17 +20,8 @@ public class CustomCommandEvent {
 		
 		Chat chat = new Chat();
 		
-		Bot.customCommandsList.forEach(customCommand -> { // Loop through entire commands list to see if our command is in here!
-			if(args[0].equalsIgnoreCase(customCommand.getCommand()) && channel.equalsIgnoreCase(customCommand.getChannel())) {
-				// Format the reply
-				String reply = customCommand.getReply()
-						.replace("[user]", user)
-						.replace("[@user]", "@" + user);
-				
-				chat.sendMessage(channel, reply);
-				return;
-			}
-		});
+		if(checkCustomCommand(chat, args, channel, user))
+			return;
 		
 		if(!chat.isModerator(e.getTags()) // Don't continue this unless the user is a moderator or broadcaster
 				&& !args[0].equalsIgnoreCase("!cmd")) // Only listen to !cmd from this point on
@@ -59,6 +51,25 @@ public class CustomCommandEvent {
 			deleteCommand(args, channel, user);
 			return;
 		}
+	}
+	
+	private boolean checkCustomCommand(Chat chat, String[] args, String channel, String user) {
+		boolean status = false;
+		
+		for(CustomCommand customCommand : Bot.customCommandsList) { // Loop through entire commands list to see if our command is in here!
+			if(args[0].equalsIgnoreCase(customCommand.getCommand()) && channel.equalsIgnoreCase(customCommand.getChannel())) {
+				// Format the reply
+				String reply = customCommand.getReply()
+						.replace("[user]", user)
+						.replace("[@user]", "@" + user);
+				
+				chat.sendMessage(channel, reply);
+				status = true;
+				break;
+			}
+		}
+		
+		return status;
 	}
 	
 	private void addCommand(String[] args, String channel, String user) {
