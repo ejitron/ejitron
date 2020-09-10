@@ -40,7 +40,7 @@ public class WatchTimer {
 			Chatters chatList = Bot.twitchClient.getMessagingInterface().getChatters(ch).execute();
 			List<String> allViewers = chatList.getAllViewers();
 			
-			if(allViewers.size() < 1) // Skip if there's nobody watching
+			if(allViewers.isEmpty()) // Skip if there's nobody watching
 				return;
 			
 			allViewers.forEach(viewer -> {
