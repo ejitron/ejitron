@@ -111,7 +111,7 @@ public class CustomCommandEvent {
 		}
 	}
 	
-	public void addCommand(String channel, String user, String name, String reply) {
+	private void addCommand(String channel, String user, String name, String reply) {
 		Command command = new Command();
 		Chat chat = new Chat();
 		
@@ -129,7 +129,7 @@ public class CustomCommandEvent {
 		chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
 	}
 	
-	public void editCommand(String channel, String user, String name, String newReply) {
+	private void editCommand(String channel, String user, String name, String newReply) {
 		Command command = new Command();
 		Chat chat = new Chat();
 		
@@ -147,7 +147,7 @@ public class CustomCommandEvent {
 		chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
 	}
 	
-	public void deleteCommand(String channel, String user, String name) {
+	private void deleteCommand(String channel, String user, String name) {
 		Command command = new Command();
 		Chat chat = new Chat();
 		
