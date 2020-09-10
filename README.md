@@ -1,5 +1,5 @@
 # Ejitron
-[![Build Status](https://travis-ci.org/ejitron/ejitron.svg?branch=master)](https://travis-ci.org/ejitron/ejitron) ![Build Status](https://www.code-inspector.com/project/12330/score/svg)
+[![Build Status](https://travis-ci.org/ejitron/ejitron.svg?branch=development)](https://travis-ci.org/ejitron/ejitron) ![Build Status](https://www.code-inspector.com/project/12330/score/svg)
 
 Open source Twitch chat bot
 
