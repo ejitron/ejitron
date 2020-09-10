@@ -46,74 +46,46 @@ public class CustomCommandEvent {
 		String setting = args[1];
 		
 		if("add".equalsIgnoreCase(setting)) {
-			// For this we need 4 arguments:
-			// 1. The command
-			// 2. The setting
-			// 3. Command name <--
-			// 4. Reply
-			if(args.length < 4) {
-				chat.sendMessage(channel, "@" + user + " not enough arguments!");
-				return;
-			}
-			
-			
-			String name = args[2];
-			String reply = "";
-			for(int i = 3; i < args.length; i++) { // Build the reply
-				if(i == args.length-1) { // Don't include a space in the last word!
-					reply += args[i];
-					break;
-				}
-				
-				reply += args[i] + " ";
-			}
-
-			addCommand(channel, user, name, reply);
+			addCommand(args, channel, user);
 			return;
 		}
 		
 		else if("edit".equalsIgnoreCase(setting)) {
-			// For this we need 4 arguments:
-			// 1. The command
-			// 2. The setting
-			// 3. Command name <--
-			// 4. A new reply
-			if(args.length < 4) {
-				chat.sendMessage(channel, "@" + user + " not enough arguments!");
-				return;
-			}
-			
-			String name = args[2];
-			String newReply = "";
-			for(int i = 3; i < args.length; i++) { // Build the reply
-				if(i == args.length-1) { // Don't include a space in the last word!
-					newReply += args[i];
-					break;
-				}
-				
-				newReply += args[i] + " ";
-			}
-			
-			editCommand(channel, user, name, newReply);
+			editCommand(args, channel, user);
 			return;
 		}
 		
 		else if("delete".equalsIgnoreCase(setting)) {
-			// For this we need 3 arguments:
-			// 1. The command
-			// 2. The setting
-			// 3. Command name <--
-
-			String name = args[2];
-			
-			deleteCommand(channel, user, name);
+			deleteCommand(args, channel, user);
 			return;
 		}
 	}
 	
-	private void addCommand(String channel, String user, String name, String reply) {
+	private void addCommand(String[] args, String channel, String user) {
 		Command command = new Command();
 		Chat chat = new Chat();
+		
+		// For this we need 4 arguments:
+		// 1. The command
+		// 2. The setting
+		// 3. Command name <--
+		// 4. Reply
+		if(args.length < 4) {
+			chat.sendMessage(channel, "@" + user + " not enough arguments!");
+			return;
+		}
+		
+		
+		String name = args[2];
+		String reply = "";
+		for(int i = 3; i < args.length; i++) { // Build the reply
+			if(i == args.length-1) { // Don't include a space in the last word!
+				reply += args[i];
+				break;
+			}
+			
+			reply += args[i] + " ";
+		}
 		
 		// Make sure the command doesn't exist yet!
 		if(command.commandExists(channel, name)) {
@@ -129,9 +101,30 @@ public class CustomCommandEvent {
 		chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
 	}
 	
-	private void editCommand(String channel, String user, String name, String newReply) {
+	private void editCommand(String[] args, String channel, String user) {
 		Command command = new Command();
 		Chat chat = new Chat();
+		
+		// For this we need 4 arguments:
+		// 1. The command
+		// 2. The setting
+		// 3. Command name <--
+		// 4. A new reply
+		if(args.length < 4) {
+			chat.sendMessage(channel, "@" + user + " not enough arguments!");
+			return;
+		}
+		
+		String name = args[2];
+		String newReply = "";
+		for(int i = 3; i < args.length; i++) { // Build the reply
+			if(i == args.length-1) { // Don't include a space in the last word!
+				newReply += args[i];
+				break;
+			}
+			
+			newReply += args[i] + " ";
+		}
 		
 		// Make sure the command exist!
 		if(!command.commandExists(channel, name)) {
@@ -147,9 +140,16 @@ public class CustomCommandEvent {
 		chat.sendMessage(channel, "@" + user + " Could not save the command " + name + ". Try again later!");
 	}
 	
-	private void deleteCommand(String channel, String user, String name) {
+	private void deleteCommand(String[] args, String channel, String user) {
 		Command command = new Command();
 		Chat chat = new Chat();
+		
+		// For this we need 3 arguments:
+		// 1. The command
+		// 2. The setting
+		// 3. Command name <--
+
+		String name = args[2];
 		
 		// Make sure the command exist!
 		if(!command.commandExists(channel, name)) {
