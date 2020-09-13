@@ -1,6 +1,7 @@
 package com.github.ejitron.chat.user;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.ejitron.Bot;
 import com.github.ejitron.helix.Stream;
@@ -17,9 +18,9 @@ public class WatchTimer {
 		Stream stream = new Stream();
 		Channel channel = new Channel();
 		WatchTimeListing watchTimeListing = new WatchTimeListing();
-		List<String> joinedChannels = channel.getAddedChannels();
+		Map<String, Integer> joinedChannels = channel.getAddedChannels();
 		
-		joinedChannels.forEach(ch -> {
+		joinedChannels.forEach((ch, newStatus) -> {
 			if(stream.getStream(ch) == null) // If the stream is offline, don't count!
 				return;
 			

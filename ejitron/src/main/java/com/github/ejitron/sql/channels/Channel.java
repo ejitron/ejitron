@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.github.ejitron.oauth.Credential;
 import com.github.ejitron.oauth.Identity;
@@ -21,7 +21,7 @@ public class Channel {
 	 * If there was an exception it returns {@code null}
 	 * @see #getChannelAccessToken(String)
 	 */
-	public List<String> getAddedChannels() {
+	public Map<String, Integer> getAddedChannels() {
 		ResultSet result;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -30,12 +30,12 @@ public class Channel {
 					Credential.DB_PASS.getValue());
 			
 			Statement stmt = con.createStatement();
-			result = stmt.executeQuery("SELECT channel FROM channels;");
+			result = stmt.executeQuery("SELECT channel, new_channel FROM channels;");
 
-			List<String> channels = new ArrayList<String>();
+			Map<String, Integer> channels = new HashMap<String, Integer>();
 
 			while (result.next()) {
-				channels.add(result.getString(1));
+				channels.put(result.getString(1), result.getInt(2));
 			}
 			
 			stmt.close();
@@ -47,6 +47,33 @@ public class Channel {
 		} catch (Exception e) {
 			System.out.println(e);
 			return null;
+		}
+	}
+	
+	/**
+	 * TODO
+	 * @param channel
+	 * @param status
+	 * @return
+	 */
+	public boolean updateChannelStatus(String channel, int status) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+						Credential.DB_USER.getValue(),
+						Credential.DB_PASS.getValue());
+
+			PreparedStatement pstmt = con.prepareStatement("UPDATE channels SET new_channel=? WHERE channel=?");
+			pstmt.setInt(1, status);
+			pstmt.setString(2, channel);
+			pstmt.executeUpdate();
+
+			con.close();
+
+			return true;
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
 		}
 	}
 	

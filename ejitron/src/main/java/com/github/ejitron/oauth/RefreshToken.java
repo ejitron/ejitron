@@ -8,7 +8,7 @@ public class RefreshToken {
 		Channel channel = new Channel();
 		
 		// Refresh the tokens for each channel added!
-		channel.getAddedChannels().forEach(ch -> {
+		channel.getAddedChannels().forEach((ch, newStatus) -> {
 			channel.refreshChannelOAuth2(ch);
 		});
 	}

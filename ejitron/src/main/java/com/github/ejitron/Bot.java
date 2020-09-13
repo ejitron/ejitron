@@ -2,6 +2,7 @@ package com.github.ejitron;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -69,11 +70,11 @@ public class Bot {
 		CommandTimer.startCooldown();
 		
 		Channel channels = new Channel();
-		List<String> joinedChannels = channels.getAddedChannels();
+		Map<String, Integer> joinedChannels = channels.getAddedChannels();
 		
 		// Loop through all registered channels and join
 		AddChannel addChannel = new AddChannel();
-		joinedChannels.forEach(channel -> {
+		joinedChannels.forEach((channel, newStatus) -> {
 			addChannel.joinChannel(channel);
 		});
 		

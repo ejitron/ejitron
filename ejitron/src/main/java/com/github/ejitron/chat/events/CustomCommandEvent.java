@@ -23,14 +23,16 @@ public class CustomCommandEvent {
 		if(checkCustomCommand(chat, args, channel, user))
 			return;
 		
-		if(!chat.isModerator(e.getTags()) // Don't continue this unless the user is a moderator or broadcaster
-				&& !args[0].equalsIgnoreCase("!cmd")) // Only listen to !cmd from this point on
+		if(!args[0].equalsIgnoreCase("!cmd")) // Only listen to !cmd from this point on
 			return;
 		
 		if(args.length == 1) { // Basic channel-command list
 			chat.sendMessage(channel, "@" + user + " All commands available in this channel are available at: https://ejitron.tv/c/" + channel);
 			return;
 		}
+		
+		if(!chat.isModerator(e.getTags())) // Don't continue this unless the user is a moderator or broadcaster
+			return;
 		
 		if(args.length < 3) // We need at least 3 total arguments to setup commands
 			return;
