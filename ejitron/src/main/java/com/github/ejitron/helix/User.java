@@ -7,7 +7,9 @@ import java.util.Arrays;
 import com.github.ejitron.Bot;
 import com.github.ejitron.sql.channels.Channel;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
+import com.github.twitch4j.helix.TwitchHelix;
 import com.github.twitch4j.helix.domain.FollowList;
+import com.github.twitch4j.helix.domain.ModeratorList;
 import com.github.twitch4j.helix.domain.UserList;
 
 public class User {
@@ -57,6 +59,21 @@ public class User {
 			return months + " months and " + days + " days";
 		else
 			return days + " days";
+	}
+	
+	/**
+	 * Checks to see if the bot account has moderator status in the channel.
+	 * @param channel a {@link java.lang.String String} channel name to check inside
+	 * @return {@code true} if yes
+	 */
+	public boolean isBotModerator(String channel) {
+		Channel channels = new Channel();
+		OAuth2Credential oauth = channels.getChannelOAuth2(channel);
+		TwitchHelix helix = Bot.twitchClient.getHelix();
+		
+		ModeratorList mods = helix.getModerators(oauth.getAccessToken(), getUserFromChannel(channel).getId(), Arrays.asList("567800258"), null).execute();
+		
+		return mods.getSubscriptions() == null ? false : true;
 	}
 
 }
