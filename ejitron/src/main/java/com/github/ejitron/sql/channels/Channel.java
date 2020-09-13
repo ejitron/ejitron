@@ -17,7 +17,7 @@ public class Channel {
 	
 	/**
 	 * Retrieves all the channels that registered the bot from the database.
-	 * @return a {@link java.util.List List} with channel names as {@link java.lang.String String} values.<br>
+	 * @return a {@link java.util.Map Map} with channel names as {@link java.lang.String String} values and their status as a {@link java.lang.Integer Integer} where 1 == new channel.<br>
 	 * If there was an exception it returns {@code null}
 	 * @see #getChannelAccessToken(String)
 	 */
@@ -51,10 +51,10 @@ public class Channel {
 	}
 	
 	/**
-	 * TODO
-	 * @param channel
-	 * @param status
-	 * @return
+	 * Updates the stored channel status, determining if it's a new channel or not.
+	 * @param channel a {@link java.lang.String String} channel name
+	 * @param status a {@link java.lang.Integer Integer} status, where 1 == a new channel.
+	 * @return {@code true} if success
 	 */
 	public boolean updateChannelStatus(String channel, int status) {
 		try {
