@@ -3,6 +3,7 @@ package com.github.ejitron.chat.events;
 import com.github.ejitron.chat.Chat;
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.helix.ChannelInfo;
+import com.github.ejitron.helix.User;
 import com.github.ejitron.sql.channels.Setting;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
@@ -29,10 +30,30 @@ public class DefaultModCommandEvent {
 			return;
 		
 		/*
+		 * !eji
+		 * Basic command for bot-specific duties
+		 */
+		if("!eji".equalsIgnoreCase(args[0])) {
+			if(args.length < 2)
+				return;
+			
+			if("check".equalsIgnoreCase(args[1])) {
+				User helixUser = new User();
+
+				if(helixUser.isBotModerator(channel))
+					chat.sendMessage(channel, "I'm a moderator and we're all good! Remember that you can manage me over on ejitron.tv");
+				else
+					chat.sendMessage(channel, "It doesn't seem like I'm a moderator in this chat. Type /mod ejitron to fix this!");
+			}
+			
+			return;
+		}
+		
+		/*
 		 * !title
 		 * Gets/Sets the current title
 		 */
-		if(args[0].equalsIgnoreCase("!title") && settings.getChannelSetting(channel, "title_cmd") == 1) {
+		if("!title".equalsIgnoreCase(args[0]) && settings.getChannelSetting(channel, "title_cmd") == 1) {
 			ChannelInfo chanInfo = new ChannelInfo();
 			CommandTimer.addToCooldown(channel, args[0]);
 			
@@ -60,7 +81,7 @@ public class DefaultModCommandEvent {
 		 * !game
 		 * Gets/Sets the current game
 		 */
-		if(args[0].equalsIgnoreCase("!game") && settings.getChannelSetting(channel, "game_cmd") == 1) {
+		if("!game".equalsIgnoreCase(args[0]) && settings.getChannelSetting(channel, "game_cmd") == 1) {
 			ChannelInfo chanInfo = new ChannelInfo();
 			CommandTimer.addToCooldown(channel, args[0]);
 			

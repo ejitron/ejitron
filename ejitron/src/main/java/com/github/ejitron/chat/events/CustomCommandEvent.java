@@ -2,6 +2,7 @@ package com.github.ejitron.chat.events;
 
 import com.github.ejitron.Bot;
 import com.github.ejitron.chat.Chat;
+import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
 import com.github.ejitron.sql.commands.Command;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
@@ -20,6 +21,10 @@ public class CustomCommandEvent {
 		
 		Chat chat = new Chat();
 		
+		// The command is in a cooldown
+		if(CommandTimer.isInCooldown(channel, args[0]))
+			return;
+		
 		if(checkCustomCommand(chat, args, channel, user))
 			return;
 		
@@ -28,6 +33,7 @@ public class CustomCommandEvent {
 		
 		if(args.length == 1) { // Basic channel-command list
 			chat.sendMessage(channel, "@" + user + " All commands available in this channel are available at: https://ejitron.tv/c/" + channel);
+			CommandTimer.addToCooldown(channel, args[0]);
 			return;
 		}
 		
@@ -64,6 +70,7 @@ public class CustomCommandEvent {
 						.replace("[@user]", "@" + user);
 				
 				chat.sendMessage(channel, reply);
+				CommandTimer.addToCooldown(channel, customCommand.getCommand());
 				status = true;
 				break;
 			}

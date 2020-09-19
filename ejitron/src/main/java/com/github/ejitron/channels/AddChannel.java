@@ -5,8 +5,10 @@ import java.util.Map;
 
 import com.github.ejitron.Bot;
 import com.github.ejitron.chat.Chat;
+import com.github.ejitron.helix.User;
 import com.github.ejitron.sql.channels.Channel;
 import com.github.twitch4j.chat.TwitchChat;
+import com.github.twitch4j.pubsub.TwitchPubSub;
 
 public class AddChannel {
 	
@@ -24,7 +26,7 @@ public class AddChannel {
 				chat.sendMessage(channel, "Hello, " + channel + "! I'm super excited to be here. "
 						+ "First things first; in order for me to function properly I need moderator permissions. "
 						+ "You can grant me this by typing /mod ejitron "
-						+ "And once that's done you can head over to http://ejitron.tv to finish setting me up!");
+						+ "If you want me to check the status of the setup, type !eji check");
 				
 				channels.updateChannelStatus(channel, 0);
 			}
@@ -43,10 +45,14 @@ public class AddChannel {
 	 */
 	public void joinChannel(String channel) {
 		Channel channels = new Channel();
+		User user = new User();
 		TwitchChat twitchChatClient = Bot.twitchClient.getChat();
+		TwitchPubSub twitchPubSub = Bot.twitchClient.getPubSub();
 		
 		if(!twitchChatClient.isChannelJoined(channel))
 			twitchChatClient.joinChannel(channel);
+		
+		twitchPubSub.listenForModerationEvents(Bot.chatOauth, "567800258", user.getUserFromChannel(channel).getId());
 		
 		// Refresh the auth token
 		channels.refreshChannelOAuth2(channel);

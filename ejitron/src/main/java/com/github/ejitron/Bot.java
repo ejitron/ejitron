@@ -12,6 +12,7 @@ import com.github.ejitron.chat.CustomCommand;
 import com.github.ejitron.chat.events.CustomCommandEvent;
 import com.github.ejitron.chat.events.DefaultModCommandEvent;
 import com.github.ejitron.chat.events.DefaultUserCommandEvent;
+import com.github.ejitron.chat.events.ModerationEvent;
 import com.github.ejitron.chat.user.WatchTime;
 import com.github.ejitron.oauth.Credential;
 import com.github.ejitron.sql.channels.Channel;
@@ -48,6 +49,7 @@ public class Bot {
 				.withEnableTMI(true)
 				.withEnableChat(true)
 				.withChatAccount(chatOauth)
+				.withEnablePubSub(true)
 				.build();
 	}
 	
@@ -56,6 +58,7 @@ public class Bot {
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultModCommandEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultUserCommandEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new CustomCommandEvent());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new ModerationEvent());
 		
 		Command command = new Command();
 		command.getCustomCommands().forEach(customCommand -> {
