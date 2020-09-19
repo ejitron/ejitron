@@ -2,6 +2,7 @@ package com.github.ejitron;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,6 +12,7 @@ import com.github.ejitron.chat.CustomCommand;
 import com.github.ejitron.chat.events.CustomCommandEvent;
 import com.github.ejitron.chat.events.DefaultModCommandEvent;
 import com.github.ejitron.chat.events.DefaultUserCommandEvent;
+import com.github.ejitron.chat.events.ModerationEvent;
 import com.github.ejitron.chat.user.WatchTime;
 import com.github.ejitron.oauth.Credential;
 import com.github.ejitron.sql.channels.Channel;
@@ -47,6 +49,7 @@ public class Bot {
 				.withEnableTMI(true)
 				.withEnableChat(true)
 				.withChatAccount(chatOauth)
+				.withEnablePubSub(true)
 				.build();
 	}
 	
@@ -55,6 +58,7 @@ public class Bot {
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultModCommandEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultUserCommandEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new CustomCommandEvent());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new ModerationEvent());
 		
 		Command command = new Command();
 		command.getCustomCommands().forEach(customCommand -> {
@@ -69,11 +73,11 @@ public class Bot {
 		CommandTimer.startCooldown();
 		
 		Channel channels = new Channel();
-		List<String> joinedChannels = channels.getAddedChannels();
+		Map<String, Integer> joinedChannels = channels.getAddedChannels();
 		
 		// Loop through all registered channels and join
 		AddChannel addChannel = new AddChannel();
-		joinedChannels.forEach(channel -> {
+		joinedChannels.forEach((channel, newStatus) -> {
 			addChannel.joinChannel(channel);
 		});
 		

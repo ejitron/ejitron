@@ -103,12 +103,7 @@ public class Command {
 			con.close();
 			
 			// Remove the command from the local list as well!
-			for(int i = 0; i < Bot.customCommandsList.size(); i++) {
-				CustomCommand curCommand = Bot.customCommandsList.get(i);
-				
-				if(curCommand.getChannel().equalsIgnoreCase(channel) && curCommand.getCommand().equalsIgnoreCase(command))
-					Bot.customCommandsList.remove(i);
-			}
+			updateLocalList(channel, command, null, true);
 
 			return true;
 		} catch (Exception e) {
@@ -145,13 +140,8 @@ public class Command {
 
 			con.close();
 			
-			// Remove the command from the local list as well!
-			for(int i = 0; i < Bot.customCommandsList.size(); i++) {
-				CustomCommand curCommand = Bot.customCommandsList.get(i);
-				
-				if(curCommand.getChannel().equalsIgnoreCase(channel) && curCommand.getCommand().equalsIgnoreCase(command))
-					Bot.customCommandsList.set(i, new CustomCommand(channel, command, newReply));
-			}
+			// Edit the local list
+			updateLocalList(channel, command, newReply, false);
 
 			return true;
 		} catch (Exception e) {
@@ -198,5 +188,17 @@ public class Command {
 		}
 		
 		return false;
+	}
+	
+	private void updateLocalList(String channel, String command, String newReply, boolean delete) {
+		for(int i = 0; i < Bot.customCommandsList.size(); i++) {
+			CustomCommand curCommand = Bot.customCommandsList.get(i);
+			
+			if(curCommand.getChannel().equalsIgnoreCase(channel) && curCommand.getCommand().equalsIgnoreCase(command))
+				if(delete)
+					Bot.customCommandsList.remove(i);
+				else
+					Bot.customCommandsList.set(i, new CustomCommand(channel, command, newReply));
+		}
 	}
 }

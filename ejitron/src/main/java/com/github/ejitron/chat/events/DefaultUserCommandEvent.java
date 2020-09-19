@@ -34,7 +34,7 @@ public class DefaultUserCommandEvent {
 		 * !clip
 		 * Creates a clip and sends to chat
 		 */
-		if(args[0].equalsIgnoreCase("!clip") && settings.getChannelSetting(channel, "clip_cmd") == 1) {
+		if("!clip".equalsIgnoreCase(args[0]) && settings.getChannelSetting(channel, "clip_cmd") == 1) {
 			Clip clip = new Clip();
 			CommandTimer.addToCooldown(channel, args[0]);
 			
@@ -52,7 +52,7 @@ public class DefaultUserCommandEvent {
 		 * !followage
 		 * Retrieves the amount of time the user has followed the channel
 		 */
-		if(args[0].equalsIgnoreCase("!followage") && settings.getChannelSetting(channel, "followage_cmd") == 1) {
+		if("!followage".equalsIgnoreCase(args[0]) && settings.getChannelSetting(channel, "followage_cmd") == 1) {
 			User user = new User();
 			String age = user.getFollowAge(author, channel);
 			CommandTimer.addToCooldown(channel, args[0]);
@@ -70,7 +70,7 @@ public class DefaultUserCommandEvent {
 		 * !watchtime
 		 * Retrieves the total time a user has watched the stream since the bot was added
 		 */
-		if(args[0].equalsIgnoreCase("!watchtime") && settings.getChannelSetting(channel, "watchtime") == 1) {
+		if("!watchtime".equalsIgnoreCase(args[0]) && settings.getChannelSetting(channel, "watchtime") == 1) {
 			// The broadcaster can't get a watch time of themselves
 			if(channel.equalsIgnoreCase(author)) {
 				chat.sendMessage(channel, author + " You don't have a watchtime of yourself.");

@@ -7,7 +7,9 @@ import java.util.Arrays;
 import com.github.ejitron.Bot;
 import com.github.ejitron.sql.channels.Channel;
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
+import com.github.twitch4j.helix.TwitchHelix;
 import com.github.twitch4j.helix.domain.FollowList;
+import com.github.twitch4j.helix.domain.ModeratorList;
 import com.github.twitch4j.helix.domain.UserList;
 
 public class User {
@@ -16,9 +18,22 @@ public class User {
 	 * Retrieves the {@link com.github.twitch4j.helix.domain.User User} of a channel.
 	 * @param channel the channel name
 	 * @return a {@link com.github.twitch4j.helix.domain.User User} object
+	 * @see #getUserFromId(String)
 	 */
 	public com.github.twitch4j.helix.domain.User getUserFromChannel(String channel) {
 		UserList usrList = Bot.twitchClient.getHelix().getUsers(Bot.chatOauth.getAccessToken(), null, Arrays.asList(channel)).execute();
+		
+		return usrList.getUsers().get(0);
+	}
+	
+	/**
+	 * Retrieves the {@link com.github.twitch4j.helix.domain.User User} of a userId
+	 * @param userId a {@link java.lang.String String} userId
+	 * @return a {@link com.github.twitch4j.helix.domain.User User} object
+	 * @see #getUserFromChannel(String)
+	 */
+	public com.github.twitch4j.helix.domain.User getUserFromId(String userId) {
+		UserList usrList = Bot.twitchClient.getHelix().getUsers(Bot.chatOauth.getAccessToken(), Arrays.asList(userId), null).execute();
 		
 		return usrList.getUsers().get(0);
 	}
@@ -57,6 +72,21 @@ public class User {
 			return months + " months and " + days + " days";
 		else
 			return days + " days";
+	}
+	
+	/**
+	 * Checks to see if the bot account has moderator status in the channel.
+	 * @param channel a {@link java.lang.String String} channel name to check inside
+	 * @return {@code true} if yes
+	 */
+	public boolean isBotModerator(String channel) {
+		Channel channels = new Channel();
+		OAuth2Credential oauth = channels.getChannelOAuth2(channel);
+		TwitchHelix helix = Bot.twitchClient.getHelix();
+		
+		ModeratorList mods = helix.getModerators(oauth.getAccessToken(), getUserFromChannel(channel).getId(), Arrays.asList("567800258"), null).execute();
+		
+		return mods.getSubscriptions() == null ? false : true;
 	}
 
 }
