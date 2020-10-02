@@ -41,6 +41,7 @@ public class Bot {
 	 */
 	public Bot() {
 		eventManager.registerEventHandler(new SimpleEventHandler());
+		eventManager.autoDiscovery();
 		
 		twitchClient = TwitchClientBuilder.builder()
 				.withEventManager(eventManager)
