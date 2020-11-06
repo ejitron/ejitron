@@ -14,6 +14,7 @@ public class Setting {
 	 * @param channel the channel name
 	 * @param setting the setting name
 	 * @return a {@link java.lang.Integer Integer} object with the value.
+	 * @see #getChannelSettingString(String, String)
 	 */
 	public int getChannelSetting(String channel, String setting) {
 		ResultSet result;
@@ -44,6 +45,41 @@ public class Setting {
 			return -1;
 		}
 	}
-
 	
+	/**
+	 * Retrieves the string value of a setting.
+	 * @param channel the channel name
+	 * @param setting the setting name
+	 * @return a {@link java.lang.String String} object with the value.
+	 * @see #getChannelSetting(String, String)
+	 */
+	public String getChannelSettingString(String channel, String setting) {
+		ResultSet result;
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
+			
+			PreparedStatement pstmt = con.prepareStatement("SELECT `" + setting + "` FROM settings WHERE channel=?;");
+			pstmt.setString(1, channel);
+			result = pstmt.executeQuery();
+
+			String settingValue = "";
+
+			while (result.next()) {
+				settingValue = result.getString(1);
+			}
+			
+			pstmt.close();
+			result.close();
+			con.close();
+
+			return settingValue;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
 }

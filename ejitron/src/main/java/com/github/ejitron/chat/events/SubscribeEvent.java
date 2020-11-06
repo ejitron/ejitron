@@ -1,6 +1,7 @@
 package com.github.ejitron.chat.events;
 
 import com.github.ejitron.chat.Chat;
+import com.github.ejitron.sql.channels.Setting;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.GiftSubscriptionsEvent;
 import com.github.twitch4j.chat.events.channel.SubscriptionEvent;
@@ -11,6 +12,7 @@ public class SubscribeEvent {
 	@EventSubscriber
 	public void onSubscribe(SubscriptionEvent e) {
 		Chat chat = new Chat();
+		Setting setting = new Setting();
 		
 		String user = e.getUser().getName();
 		int months = e.getMonths();
@@ -19,33 +21,36 @@ public class SubscribeEvent {
 		if(e.getGifted()) // Stop if it's gifted. We have another method for that.
 			return;
 		
-		/*
-		 * TODO
-		 * Send customized message to channel chat.
-		 */
+		String message = "";
 		
-		if(months <= 1) {
-			// First timer
-			chat.sendMessage(e.getChannel().getName(), "");
-		} else {
-			// Streak
-			chat.sendMessage(e.getChannel().getName(), "");
+		if(months <= 1) { // First timer
+			message = setting.getChannelSettingString(e.getChannel().getName(), "sub_message_first")
+					.replace("[user]", user);
+		} else { // Streak
+			message = setting.getChannelSettingString(e.getChannel().getName(), "sub_message_recurring")
+					.replace("[user]", user)
+					.replace("[months]", String.valueOf(months))
+					.replace("[streak]", String.valueOf(streak));
 		}
+
+		chat.sendMessage(e.getChannel().getName(), message);
 	}
 	
 	// Someone gifts subscribtions
 	@EventSubscriber
 	public void onGiftedSubscription(GiftSubscriptionsEvent e) {
 		Chat chat = new Chat();
+		Setting setting = new Setting();
 		
 		String user = e.getUser().getName();
 		int count = e.getCount();
 		int totalGifted = e.getTotalCount();
 		
-		/*
-		 * TODO
-		 * Send customized message to channel chat.
-		 */
-		chat.sendMessage(e.getChannel().getName(), "");
+		String message = setting.getChannelSettingString(e.getChannel().getName(), "sub_message_gifted")
+				.replace("[user]", user)
+				.replace("[amount]", String.valueOf(count))
+				.replace("[total]", String.valueOf(totalGifted));
+		
+		chat.sendMessage(e.getChannel().getName(), message);
 	}
 }
