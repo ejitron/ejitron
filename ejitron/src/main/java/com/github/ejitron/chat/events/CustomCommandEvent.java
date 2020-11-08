@@ -32,17 +32,27 @@ public class CustomCommandEvent {
 			return;
 		
 		if(args.length == 1) { // Basic channel-command list
-			chat.sendMessage(channel, "@" + user + " All commands available in this channel are available at: https://ejitron.tv/c/" + channel);
+			chat.sendMessage(channel, "@" + user + " All commands available in this channel are available at: https://ejitron.tv/docs/c/" + channel);
 			CommandTimer.addToCooldown(channel, args[0]);
 			return;
 		}
 		
 		if(!chat.isModerator(e.getTags())) // Don't continue this unless the user is a moderator or broadcaster
 			return;
-		
-		if(args.length < 3) // We need at least 3 total arguments to setup commands
-			return;
-		
+
+		if(args.length < 3) {
+			if(args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("edit")) { // We need at least 3 total arguments to setup commands
+				chat.sendMessage(channel, "@" + user + " More information on https://ejitron.tv/docs. Correct usage: !cmd add/edit !mycommand some cool response!");
+				return;
+			} else if(args[1].equalsIgnoreCase("delete")) {
+				chat.sendMessage(channel, "@" + user + " More information on https://ejitron.tv/docs. Correct usage: !cmd delete !mycommand");
+				return;
+			} else {
+				chat.sendMessage(channel, "@" + user + " More information on https://ejitron.tv/docs. Applicable arguments are: add, edit or delete.");
+				return;
+			}
+		}
+
 		if("add".equalsIgnoreCase(args[1])) {
 			addCommand(args, channel, user);
 			return;
