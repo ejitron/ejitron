@@ -3,4 +3,6 @@ ejitron/src/test/
 ejitron/target/
 ejitron/.classpath
 ejitron/.project
+ejitron/.idea
+ejitron/ejitron.iml
 /.metadata/
