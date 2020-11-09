@@ -129,14 +129,14 @@ public class CustomCommandEvent {
 		
 		
 		String name = args[2];
-		String reply = "";
+		StringBuilder reply = new StringBuilder();
 		for(int i = 3; i < args.length; i++) { // Build the reply
 			if(i == args.length-1) { // Don't include a space in the last word!
-				reply += args[i];
+				reply.append(args[i]);
 				break;
 			}
 			
-			reply += args[i] + " ";
+			reply.append(args[i]).append(" ");
 		}
 		
 		// Make sure the command doesn't exist yet!
@@ -145,7 +145,7 @@ public class CustomCommandEvent {
 			return;
 		}
 		
-		if(command.addCustomCommand(channel, name, reply)) {
+		if(command.addCustomCommand(channel, name, reply.toString())) {
 			chat.sendMessage(channel, "@" + user + " Saved the new command " + name);
 			return;
 		}
@@ -168,14 +168,14 @@ public class CustomCommandEvent {
 		}
 		
 		String name = args[2];
-		String newReply = "";
+		StringBuilder newReply = new StringBuilder();
 		for(int i = 3; i < args.length; i++) { // Build the reply
 			if(i == args.length-1) { // Don't include a space in the last word!
-				newReply += args[i];
+				newReply.append(args[i]);
 				break;
 			}
 			
-			newReply += args[i] + " ";
+			newReply.append(args[i]).append(" ");
 		}
 		
 		// Make sure the command exist!
@@ -183,8 +183,8 @@ public class CustomCommandEvent {
 			chat.sendMessage(channel, "@" + user + " That command does not exist.");
 			return;
 		}
-		
-		if(command.editCustomCommand(channel, name, newReply)) {
+
+		if(command.editCustomCommand(channel, name, newReply.toString())) {
 			chat.sendMessage(channel, "@" + user + " Saved the command " + name);
 			return;
 		}
