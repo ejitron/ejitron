@@ -4,9 +4,12 @@ import com.github.ejitron.Bot;
 import com.github.ejitron.chat.Chat;
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
+import com.github.ejitron.helix.User;
 import com.github.ejitron.sql.commands.Command;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
+
+import java.util.Map;
 
 public class CustomCommandEvent {
 	
@@ -25,7 +28,7 @@ public class CustomCommandEvent {
 		if(CommandTimer.isInCooldown(channel, args[0]))
 			return;
 		
-		if(checkCustomCommand(chat, args, channel, user))
+		if(checkCustomCommand(chat, args, channel, user, e.getTags()))
 			return;
 		
 		if(!args[0].equalsIgnoreCase("!cmd")) // Only listen to !cmd from this point on
@@ -69,19 +72,40 @@ public class CustomCommandEvent {
 		}
 	}
 	
-	private boolean checkCustomCommand(Chat chat, String[] args, String channel, String user) {
+	private boolean checkCustomCommand(Chat chat, String[] args, String channel, String user, Map<String, String> tags) {
 		boolean status = false;
+		User ejiUser = new User();
 		
 		for(CustomCommand customCommand : Bot.customCommandsList) { // Loop through entire commands list to see if our command is in here!
 			if(args[0].equalsIgnoreCase(customCommand.getCommand()) && channel.equalsIgnoreCase(customCommand.getChannel())) {
+				customCommand.setCount(customCommand.getCount() + 1); // Increment usage
+
 				// Format the reply
-				String reply = customCommand.getReply()
-						.replace("[user]", user)
-						.replace("[@user]", "@" + user);
-				
+				String reply = customCommand.getReply();
+				if(reply.contains("[user]"))
+					reply = reply.replace("[user]", user);
+				if(reply.contains("[@user]"))
+					reply = reply.replace("[@user]", "@" + user);
+				if(reply.contains("[followage]")) {
+					String followage = ejiUser.getFollowAge(user, channel);
+					if(followage != null)
+						reply = reply.replace("[followage]", ejiUser.getFollowAge(user, channel));
+					else
+						reply = reply.replace("[followage]", "error");
+				}
+				if(reply.contains("[channel]"))
+					reply = reply.replace("[channel]", channel);
+				if(reply.contains("[count]"))
+					reply = reply.replace("[count]", String.valueOf(customCommand.getCount()));
+
 				chat.sendMessage(channel, reply);
-				CommandTimer.addToCooldown(channel, customCommand.getCommand());
+
+				if(!chat.isModerator(tags))
+					CommandTimer.addToCooldown(channel, customCommand.getCommand());
+
 				status = true;
+				Command command = new Command();
+				command.updateCommandCount(customCommand.getChannel(), customCommand.getCommand(), customCommand.getCount());
 				break;
 			}
 		}

@@ -48,6 +48,9 @@ public class User {
 	public String getFollowAge(String user, String channel) {
 		Channel channels = new Channel();
 		OAuth2Credential oauth = channels.getChannelOAuth2(channel);
+
+		if(user.equalsIgnoreCase(channel))
+			return null;
 		
 		FollowList resList = Bot.twitchClient.getHelix().getFollowers(oauth.getAccessToken(), getUserFromChannel(user).getId(), getUserFromChannel(channel).getId(), null, 1).execute();
 		

@@ -13,11 +13,13 @@ public class CustomCommand {
 	private final String channel;
 	private final String command;
 	private final String reply;
+	private int count;
 	
-	public CustomCommand(String channel, String command, String reply) {
+	public CustomCommand(String channel, String command, String reply, int count) {
 		this.channel = channel;
 		this.command = command;
 		this.reply = reply;
+		this.count = count;
 	}
 	
 	/**
@@ -42,5 +44,21 @@ public class CustomCommand {
 	 */
 	public String getReply() {
 		return reply;
+	}
+
+	/**
+	 * Retrieves the number of times command has been used
+	 * @return a {@link java.lang.Integer Integer} reply
+	 */
+	public int getCount() {
+		return count;
+	}
+
+	/**
+	 * Sets the count of the command.
+	 * @param newCount a {@link java.lang.Integer Integer} count
+	 */
+	public void setCount(int newCount) {
+		count = newCount;
 	}
 }

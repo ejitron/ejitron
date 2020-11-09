@@ -27,12 +27,17 @@ public class Command {
 					Credential.DB_PASS.getValue());
 			
 			Statement stmt = con.createStatement();
-			result = stmt.executeQuery("SELECT channel,command,reply FROM commands;");
+			result = stmt.executeQuery("SELECT channel,command,reply,count FROM commands;");
 
 			List<CustomCommand> commandList = new ArrayList<CustomCommand>();
 
 			while (result.next()) {
-				commandList.add(new CustomCommand(result.getString(1), result.getString(2), result.getString(3)));
+				commandList.add(new CustomCommand(
+						result.getString(1),
+						result.getString(2),
+						result.getString(3),
+						result.getInt(4)
+				));
 			}
 			
 			stmt.close();
@@ -48,7 +53,7 @@ public class Command {
 	}
 	
 	/**
-	 * Adds a {@link com.github.ejitron.chat.CustomCommand.CustomCommand CustomCommand} to the database and the local commands list
+	 * Adds a {@link com.github.ejitron.chat.CustomCommand CustomCommand} to the database and the local commands list
 	 * @param channel the channel the command belongs to
 	 * @param command the command name
 	 * @param reply the reply for the command
@@ -63,7 +68,7 @@ public class Command {
 						Credential.DB_USER.getValue(),
 						Credential.DB_PASS.getValue());
 
-			PreparedStatement pstmt = con.prepareStatement("INSERT INTO commands(`channel`,`command`,`reply`) VALUES(?,?,?);");
+			PreparedStatement pstmt = con.prepareStatement("INSERT INTO commands(`channel`,`command`,`reply`,`count`) VALUES(?,?,?,0);");
 			pstmt.setString(1, channel);
 			pstmt.setString(2, command);
 			pstmt.setString(3, reply);
@@ -71,7 +76,7 @@ public class Command {
 
 			con.close();
 			
-			Bot.customCommandsList.add(new CustomCommand(channel, command, reply));
+			Bot.customCommandsList.add(new CustomCommand(channel, command, reply, 0));
 
 			return true;
 		} catch (Exception e) {
@@ -81,7 +86,7 @@ public class Command {
 	}
 	
 	/**
-	 * Deletes a {@link com.github.ejitron.chat.CustomCommand.CustomCommand CustomCommand} from the database and the local commands list
+	 * Deletes a {@link com.github.ejitron.chat.CustomCommand CustomCommand} from the database and the local commands list
 	 * @param channel the channel the command belongs to
 	 * @param command the command name
 	 * @return {@code true} if success
@@ -113,7 +118,7 @@ public class Command {
 	}
 	
 	/**
-	 * Edits an existing {@link com.github.ejitron.chat.CustomCommand.CustomCommand CustomCommand} 
+	 * Edits an existing {@link com.github.ejitron.chat.CustomCommand CustomCommand}
 	 * and stores the updated 
 	 * one in the database and the local commands list.<br>
 	 * <b>Make sure the command exists. Will not do anything otherwise</b>
@@ -149,6 +154,38 @@ public class Command {
 			return false;
 		}
 	}
+
+	/**
+	 * TODO documentation
+	 * @param channel
+	 * @param command
+	 * @param newCount
+	 * @return
+	 */
+	public boolean addToCustomCommandCount(String channel, String command, int newCount) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",
+					Credential.DB_USER.getValue(),
+					Credential.DB_PASS.getValue());
+
+			PreparedStatement pstmt = con.prepareStatement("UPDATE commands SET count=? WHERE channel=? AND command=?");
+			pstmt.setInt(1, newCount);
+			pstmt.setString(2, channel);
+			pstmt.setString(3, command);
+			pstmt.executeUpdate();
+
+			con.close();
+
+			// Edit the local list
+//			updateLocalList(channel, command, newReply, false);
+
+			return true;
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
+	}
 	
 	/**
 	 * Checks the database if the given command exists.
@@ -169,7 +206,7 @@ public class Command {
 			result = stmt.executeQuery("SELECT channel,command FROM commands;");
 
 			while (result.next()) {
-				commandList.add(new CustomCommand(result.getString(1), result.getString(2), null));
+				commandList.add(new CustomCommand(result.getString(1), result.getString(2), null, -1));
 			}
 			
 			stmt.close();
@@ -179,11 +216,9 @@ public class Command {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
-		for(int i = 0; i < commandList.size(); i++) {
-			CustomCommand curCommand = commandList.get(i);
-			
-			if(curCommand.getChannel().equalsIgnoreCase(channel) && curCommand.getCommand().equalsIgnoreCase(command))
+
+		for (CustomCommand curCommand : commandList) {
+			if (curCommand.getChannel().equalsIgnoreCase(channel) && curCommand.getCommand().equalsIgnoreCase(command))
 				return true;
 		}
 		
@@ -198,7 +233,25 @@ public class Command {
 				if(delete)
 					Bot.customCommandsList.remove(i);
 				else
-					Bot.customCommandsList.set(i, new CustomCommand(channel, command, newReply));
+					Bot.customCommandsList.set(i, new CustomCommand(channel, command, newReply, Bot.customCommandsList.get(i).getCount()));
+		}
+	}
+
+	/**
+	 * Updates the command count in the local list
+	 * @param channel the channel the command belongs to
+	 * @param command the command name
+	 * @param count the number of count to be saved
+	 */
+	public void updateCommandCount(String channel, String command, int count) {
+		for(int i = 0; i < Bot.customCommandsList.size(); i++) {
+			CustomCommand curCommand = Bot.customCommandsList.get(i);
+
+			if(curCommand.getChannel().equalsIgnoreCase(channel) && curCommand.getCommand().equalsIgnoreCase(command)) {
+				curCommand.setCount(count);
+				Bot.customCommandsList.set(i, new CustomCommand(curCommand.getChannel(), curCommand.getCommand(), curCommand.getReply(), count));
+				addToCustomCommandCount(channel, command, count);
+			}
 		}
 	}
 }
