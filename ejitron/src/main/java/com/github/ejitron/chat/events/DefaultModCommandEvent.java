@@ -3,6 +3,7 @@ package com.github.ejitron.chat.events;
 import com.github.ejitron.chat.Chat;
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.helix.ChannelInfo;
+import com.github.ejitron.helix.Stream;
 import com.github.ejitron.helix.User;
 import com.github.ejitron.sql.channels.Setting;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
@@ -102,6 +103,31 @@ public class DefaultModCommandEvent {
 			
 			chanInfo.setChannelInfo(channel, game.toString(), null);
 			chat.sendMessage(channel, user + " Set the game to: " + game);
+			return;
+		}
+
+		/*
+		 * !commercial 30
+		 * Runs a commercial the specified time
+		 */
+		if("!commercial".equalsIgnoreCase(args[0]) && settings.getChannelSetting(channel, "commercial_cmd") == 1) {
+			Stream stream = new Stream();
+
+			if(stream.getStream(channel) == null) {
+				chat.sendMessage(channel, "Channel is not live.");
+				return;
+			}
+
+			if(args[1].equalsIgnoreCase("30") || args[1].equalsIgnoreCase("60") || args[1].equalsIgnoreCase("90") || args[1].equalsIgnoreCase("120"))
+				chat.sendMessage(channel, "Running a " + args[1] + " second ad.");
+			else
+				chat.sendMessage(channel, "Running a 30 second ad.");
+
+			int time = args[1] == null ? 30 : Integer.parseInt(args[1]);
+
+			if(!stream.runCommercial(channel, time))
+				chat.sendMessage(channel, "Could not start ad.");
+
 			return;
 		}
 		
