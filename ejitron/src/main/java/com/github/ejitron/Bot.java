@@ -9,11 +9,7 @@ import java.util.TimerTask;
 import com.github.ejitron.channels.AddChannel;
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
-import com.github.ejitron.chat.events.CustomCommandEvent;
-import com.github.ejitron.chat.events.DefaultModCommandEvent;
-import com.github.ejitron.chat.events.DefaultUserCommandEvent;
-import com.github.ejitron.chat.events.ModerationEvent;
-import com.github.ejitron.chat.events.SubscribeEvent;
+import com.github.ejitron.chat.events.*;
 import com.github.ejitron.chat.user.WatchTime;
 import com.github.ejitron.oauth.Credential;
 import com.github.ejitron.sql.channels.Channel;
@@ -57,6 +53,7 @@ public class Bot {
 	
 	public void loadConfiguration() {
 		// Events
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new BotChatEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultModCommandEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new DefaultUserCommandEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new CustomCommandEvent());
