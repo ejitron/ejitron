@@ -1,5 +1,6 @@
 package com.github.ejitron.channels;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class AddChannel {
 	public AddChannel() {
 		Channel channels = new Channel();
 		TwitchChat twitchChatClient = Bot.twitchClient.getChat();
-		List<String> currentChannels = Bot.twitchClient.getChat().getCurrentChannels(); // The channels we're in now
+		List<String> currentChannels = new ArrayList<>(Bot.twitchClient.getChat().getChannels()); // The channels we're in now
 		Map<String, Integer> savedChannels = channels.getAddedChannels(); // List of added channels
 		
 		savedChannels.forEach((channel, newStatus) -> {
@@ -33,7 +34,7 @@ public class AddChannel {
 		});
 		
 		currentChannels.forEach(channel -> { // Leave all channels that are removed from the database
-			if(savedChannels.get(channel) == null) {
+			if(!savedChannels.containsKey(channel) && !"ejitron".equalsIgnoreCase(channel)) {
 				twitchChatClient.leaveChannel(channel);
 			}
 		});
