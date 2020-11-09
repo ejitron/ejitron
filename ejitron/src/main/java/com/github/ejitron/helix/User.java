@@ -1,6 +1,8 @@
 package com.github.ejitron.helix;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
@@ -57,9 +59,9 @@ public class User {
 		if(resList.getFollows().size() < 1)
 			return null;
 		
-		LocalDateTime followDate = resList.getFollows().get(0).getFollowedAt();
+		Instant followDate = resList.getFollows().get(0).getFollowedAtInstant();
 		LocalDateTime currentDate = LocalDateTime.now();
-		LocalDateTime tempDate = LocalDateTime.from(followDate);
+		LocalDateTime tempDate = LocalDateTime.ofInstant(followDate, ZoneOffset.UTC);
 		
 		long years = tempDate.until(currentDate, ChronoUnit.YEARS);
 		tempDate = tempDate.plusYears(years);
@@ -89,7 +91,7 @@ public class User {
 		
 		ModeratorList mods = helix.getModerators(oauth.getAccessToken(), getUserFromChannel(channel).getId(), Arrays.asList("567800258"), null).execute();
 		
-		return mods.getSubscriptions() == null ? false : true;
+		return mods.getModerators() != null;
 	}
 
 }
