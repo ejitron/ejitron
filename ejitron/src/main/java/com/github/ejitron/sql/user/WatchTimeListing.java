@@ -28,7 +28,7 @@ public class WatchTimeListing {
 			Statement stmt = con.createStatement();
 			result = stmt.executeQuery("SELECT channel,user,minutes FROM watchtime;");
 
-			List<WatchTime> watchTime = new ArrayList<WatchTime>();
+			List<WatchTime> watchTime = new ArrayList<>();
 
 			while (result.next()) {
 				watchTime.add(
@@ -67,7 +67,7 @@ public class WatchTimeListing {
 			Statement stmt = con.createStatement();
 			result = stmt.executeQuery("SELECT lurker FROM lurkers;");
 
-			List<String> lurkers = new ArrayList<String>();
+			List<String> lurkers = new ArrayList<>();
 
 			while (result.next()) {
 				lurkers.add(result.getString(1));

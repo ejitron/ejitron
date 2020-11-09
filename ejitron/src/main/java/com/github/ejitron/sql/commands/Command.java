@@ -29,7 +29,7 @@ public class Command {
 			Statement stmt = con.createStatement();
 			result = stmt.executeQuery("SELECT channel,command,reply,count FROM commands;");
 
-			List<CustomCommand> commandList = new ArrayList<CustomCommand>();
+			List<CustomCommand> commandList = new ArrayList<>();
 
 			while (result.next()) {
 				commandList.add(new CustomCommand(
@@ -195,7 +195,7 @@ public class Command {
 	 */
 	public boolean commandExists(String channel, String command) {
 		ResultSet result;
-		List<CustomCommand> commandList = new ArrayList<CustomCommand>();
+		List<CustomCommand> commandList = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://" + Credential.DB_HOST.getValue() + ":3306/" + Credential.DB_NAME.getValue() + "?serverTimezone=UTC",

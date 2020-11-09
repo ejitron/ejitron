@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public final class CommandTimer {
-	public static List<CommandCooldown> cooldownList = new ArrayList<CommandCooldown>();
+	public static List<CommandCooldown> cooldownList = new ArrayList<>();
 	
 	// Prevent instantiation
 	private CommandTimer() {
@@ -36,11 +36,11 @@ public final class CommandTimer {
 	 * @return {@code true} if yes
 	 */
 	public static boolean isInCooldown(String channel, String command) {
-		for(int i = 0; i < cooldownList.size(); i++) {
-			String curChannel = cooldownList.get(i).getChannel();
-			String curCommand = cooldownList.get(i).getCommand();
-			
-			if(curChannel.equalsIgnoreCase(channel) && curCommand.equalsIgnoreCase(command))
+		for (CommandCooldown commandCooldown : cooldownList) {
+			String curChannel = commandCooldown.getChannel();
+			String curCommand = commandCooldown.getCommand();
+
+			if (curChannel.equalsIgnoreCase(channel) && curCommand.equalsIgnoreCase(command))
 				return true;
 		}
 		

@@ -21,7 +21,7 @@ public class SubscribeEvent {
 		if(e.getGifted()) // Stop if it's gifted. We have another method for that.
 			return;
 		
-		String message = "";
+		String message;
 		
 		if(months <= 1) { // First timer
 			message = setting.getChannelSettingString(e.getChannel().getName(), "sub_message_first")

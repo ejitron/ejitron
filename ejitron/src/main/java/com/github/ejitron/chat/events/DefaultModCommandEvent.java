@@ -64,15 +64,15 @@ public class DefaultModCommandEvent {
 				return;
 			}
 			
-			String title = "";
+			StringBuilder title = new StringBuilder();
 			for(int i = 1; i < args.length; i++) { // Build the title string
 				if(i == args.length-1)
-					title += args[i];
+					title.append(args[i]);
 				else
-					title += args[i] + " ";
+					title.append(args[i]).append(" ");
 			}
 			
-			chanInfo.setChannelInfo(channel, null, title);
+			chanInfo.setChannelInfo(channel, null, title.toString());
 			chat.sendMessage(channel, user + " Updated title to: " + title);
 			return;
 		}
@@ -92,15 +92,15 @@ public class DefaultModCommandEvent {
 				return;
 			}
 			
-			String game = "";
+			StringBuilder game = new StringBuilder();
 			for(int i = 1; i < args.length; i++) { // Build the game string
 				if(i == args.length-1)
-					game += args[i];
+					game.append(args[i]);
 				else
-					game += args[i] + " ";
+					game.append(args[i]).append(" ");
 			}
 			
-			chanInfo.setChannelInfo(channel, game, null);
+			chanInfo.setChannelInfo(channel, game.toString(), null);
 			chat.sendMessage(channel, user + " Set the game to: " + game);
 			return;
 		}

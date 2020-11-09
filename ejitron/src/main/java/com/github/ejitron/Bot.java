@@ -28,14 +28,14 @@ import com.github.twitch4j.TwitchClientBuilder;
 
 public class Bot {
 	
-	private static EventManager eventManager = new EventManager();
+	private static final EventManager eventManager = new EventManager();
 	
 	public static TwitchClient twitchClient;
 	
 	public static OAuth2Credential chatOauth = new OAuth2Credential("twitch", Credential.BOT_OAUTH.getValue());
 	
-	public static List<CustomCommand> customCommandsList = new ArrayList<CustomCommand>();
-	public static List<WatchTime> watchTimeList = new ArrayList<WatchTime>();
+	public static List<CustomCommand> customCommandsList = new ArrayList<>();
+	public static List<WatchTime> watchTimeList = new ArrayList<>();
 	
 	/*
 	 * Constructor
@@ -64,9 +64,7 @@ public class Bot {
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new SubscribeEvent());
 		
 		Command command = new Command();
-		command.getCustomCommands().forEach(customCommand -> {
-			customCommandsList.add(customCommand);
-		});
+		customCommandsList.addAll(command.getCustomCommands());
 	}
 	
 	public void start() {
@@ -80,9 +78,7 @@ public class Bot {
 		
 		// Loop through all registered channels and join
 		AddChannel addChannel = new AddChannel();
-		joinedChannels.forEach((channel, newStatus) -> {
-			addChannel.joinChannel(channel);
-		});
+		joinedChannels.forEach((channel, newStatus) -> addChannel.joinChannel(channel));
 		
 		// Make sure we keep updating the channel OAuth tokens
 		Timer timer = new Timer();

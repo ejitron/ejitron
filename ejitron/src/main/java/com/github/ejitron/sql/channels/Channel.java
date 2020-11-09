@@ -32,7 +32,7 @@ public class Channel {
 			Statement stmt = con.createStatement();
 			result = stmt.executeQuery("SELECT channel, new_channel FROM channels;");
 
-			Map<String, Integer> channels = new HashMap<String, Integer>();
+			Map<String, Integer> channels = new HashMap<>();
 
 			while (result.next()) {
 				channels.put(result.getString(1), result.getInt(2));
