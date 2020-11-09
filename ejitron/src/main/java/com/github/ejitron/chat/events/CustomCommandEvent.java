@@ -4,8 +4,10 @@ import com.github.ejitron.Bot;
 import com.github.ejitron.chat.Chat;
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
+import com.github.ejitron.helix.Stream;
 import com.github.ejitron.helix.User;
 import com.github.ejitron.sql.commands.Command;
+import com.github.ejitron.time.TimeFormat;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
 
@@ -74,7 +76,7 @@ public class CustomCommandEvent {
 	
 	private boolean checkCustomCommand(Chat chat, String[] args, String channel, String user, Map<String, String> tags) {
 		boolean status = false;
-		User ejiUser = new User();
+		User helixUser = new User();
 		
 		for(CustomCommand customCommand : Bot.customCommandsList) { // Loop through entire commands list to see if our command is in here!
 			if(args[0].equalsIgnoreCase(customCommand.getCommand()) && channel.equalsIgnoreCase(customCommand.getChannel())) {
@@ -86,10 +88,14 @@ public class CustomCommandEvent {
 					reply = reply.replace("[user]", user);
 				if(reply.contains("[@user]"))
 					reply = reply.replace("[@user]", "@" + user);
+				if(reply.contains("[touser]"))
+					reply = reply.replace("[touser]", (args.length > 1 ? args[1] : user));
+				if(reply.contains("[@touser]"))
+					reply = reply.replace("[@touser]", (args.length > 1 ? "@" + args[1] : "@" + user));
 				if(reply.contains("[followage]")) {
-					String followage = ejiUser.getFollowAge(user, channel);
+					String followage = helixUser.getFollowAge(user, channel);
 					if(followage != null)
-						reply = reply.replace("[followage]", ejiUser.getFollowAge(user, channel));
+						reply = reply.replace("[followage]", helixUser.getFollowAge(user, channel));
 					else
 						reply = reply.replace("[followage]", "error");
 				}
@@ -97,6 +103,15 @@ public class CustomCommandEvent {
 					reply = reply.replace("[channel]", channel);
 				if(reply.contains("[count]"))
 					reply = reply.replace("[count]", String.valueOf(customCommand.getCount()));
+				if(reply.contains("[userid]"))
+					reply = reply.replace("[userid]", helixUser.getUserFromChannel(user).getId());
+				if(reply.contains("[uptime]")) {
+					Stream stream = new Stream();
+					if(stream.getStream(channel) != null)
+						reply = reply.replace("[uptime]", TimeFormat.formatDuration(stream.getStream(channel).getUptime()));
+					else
+						reply = reply.replace("[uptime]", "offline");
+				}
 
 				chat.sendMessage(channel, reply);
 
