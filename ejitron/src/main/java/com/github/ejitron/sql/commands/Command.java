@@ -47,7 +47,7 @@ public class Command {
 			return commandList;
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -80,7 +80,7 @@ public class Command {
 
 			return true;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -112,7 +112,7 @@ public class Command {
 
 			return true;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -150,17 +150,17 @@ public class Command {
 
 			return true;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}
 
 	/**
-	 * TODO documentation
-	 * @param channel
-	 * @param command
-	 * @param newCount
-	 * @return
+	 * Sets the command count for a specific command in the database.
+	 * @param channel the channel the command belongs to
+	 * @param command the command name
+	 * @param newCount the new count to set
+	 * @return {@code true} if success
 	 */
 	public boolean addToCustomCommandCount(String channel, String command, int newCount) {
 		try {
@@ -177,12 +177,9 @@ public class Command {
 
 			con.close();
 
-			// Edit the local list
-//			updateLocalList(channel, command, newReply, false);
-
 			return true;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -214,7 +211,7 @@ public class Command {
 			con.close();
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 
 		for (CustomCommand curCommand : commandList) {
