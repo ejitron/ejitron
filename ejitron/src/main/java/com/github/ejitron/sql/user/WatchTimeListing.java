@@ -47,7 +47,7 @@ public class WatchTimeListing {
 			return watchTime;
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -80,7 +80,7 @@ public class WatchTimeListing {
 			return lurkers;
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -111,7 +111,7 @@ public class WatchTimeListing {
 
 			return true;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -141,7 +141,7 @@ public class WatchTimeListing {
 
 			return true;
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}

@@ -41,7 +41,7 @@ public class Setting {
 			return settingStatus;
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -78,7 +78,7 @@ public class Setting {
 			return settingValue;
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return null;
 		}
 	}

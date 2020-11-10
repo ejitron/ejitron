@@ -3,7 +3,7 @@ package com.github.ejitron.socket;
 public class SocketHandler {
 	
 	public void onMessageReceived(String message) {
-		String args[] = message.split("\\s+");
+		String[] args = message.split("\\s+");
 		
 		if(args.length <= 1) // We need at least 2 args to actually do anything here
 			return;
