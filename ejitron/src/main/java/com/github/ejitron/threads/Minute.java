@@ -6,12 +6,11 @@ import com.github.ejitron.channels.AddChannel;
 import com.github.ejitron.chat.user.WatchTimer;
 
 public class Minute extends TimerTask {
-	
-	@SuppressWarnings("unused")
+
 	@Override
 	public void run() {
-		WatchTimer watchTimer = new WatchTimer();
-		AddChannel addChannel = new AddChannel();
+		new WatchTimer();
+		new AddChannel();
 	}
 
 }
