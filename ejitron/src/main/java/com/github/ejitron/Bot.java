@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.github.ejitron.channels.AddChannel;
+import com.github.ejitron.chat.Automessage;
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
 import com.github.ejitron.chat.events.*;
@@ -59,6 +60,7 @@ public class Bot {
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new CustomCommandEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new ModerationEvent());
 		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new SubscribeEvent());
+		eventManager.getEventHandler(SimpleEventHandler.class).registerListener(new UserChatEvent());
 		
 		Command command = new Command();
 		customCommandsList.addAll(command.getCustomCommands());
@@ -76,7 +78,11 @@ public class Bot {
 		// Loop through all registered channels and join
 		AddChannel addChannel = new AddChannel();
 		joinedChannels.forEach((channel, newStatus) -> addChannel.joinChannel(channel));
-		
+
+		// Inject the saved automessages
+		Automessage automessage = new Automessage();
+		automessage.injectAutomessageList();
+
 		// Make sure we keep updating the channel OAuth tokens
 		Timer timer = new Timer();
 		// Timer thread for each hour
@@ -85,6 +91,7 @@ public class Bot {
 		timer.scheduleAtFixedRate(new Minute(), 60*1000, 60*1000);
 		
 		// Update the local commands list
+		// TODO Remove once the websocket handles this
 		timer.scheduleAtFixedRate(new TimerTask() {
 			
 			@Override

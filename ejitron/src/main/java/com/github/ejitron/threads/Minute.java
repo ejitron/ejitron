@@ -12,7 +12,9 @@ public class Minute extends TimerTask {
 	public void run() {
 		new WatchTimer();
 		new AddChannel();
-		new Automessage();
+
+		Automessage automessage = new Automessage();
+		automessage.runAutomessage();
 	}
 
 }
