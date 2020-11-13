@@ -24,7 +24,9 @@ public class Automessage {
 			if(setting.getChannelSetting(ch, "automessage_count") > chatCount.get(ch)) // Skip if the chat count is not reached yet
 				return;
 
-			chat.sendMessage(ch, list.get(pagination.get(ch))); // Send our message
+			StringFormat stringFormat = new StringFormat();
+			String message = stringFormat.formatStringWithVariables(list.get(pagination.get(ch)), ch, false, null, null, null);
+			chat.sendMessage(ch, message); // Send our message
 
 			if(list.size() <= (pagination.get(ch) + 1)) // If pagination is at the last item, reset!
 				pagination.replace(ch, 0);
