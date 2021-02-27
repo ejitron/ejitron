@@ -5,7 +5,6 @@ import com.github.ejitron.chat.Automessage;
 import com.github.ejitron.chat.CommandTimer;
 import com.github.ejitron.chat.CustomCommand;
 import com.github.ejitron.chat.events.*;
-import com.github.ejitron.chat.events.*;
 import com.github.ejitron.chat.user.WatchTime;
 import com.github.ejitron.oauth.Credential;
 import com.github.ejitron.sql.channels.Channel;

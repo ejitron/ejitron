@@ -112,7 +112,7 @@ public class Stream {
 			pagination = subscriptionList.getPagination().getCursor();
 		} while(response > 0);
 
-		return subs;
+		return subs - 1;
 
 	}
 }
